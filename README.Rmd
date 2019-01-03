@@ -36,10 +36,12 @@ library(tibble)
 library(dplyr)
 df = tibble::rownames_to_column(mtcars, var = "car")
 is.unsorted(df$mpg)
-res = df %>% 
-  talk_arrange("Sort by mpg")
+res = df %>%
+  talk("Sort df by mpg")
 is.unsorted(res$mpg)
 ```
+
+
 
 If you do not specify the order, it assumes ascending, as `dplyr::arrange` does:
 

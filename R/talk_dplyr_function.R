@@ -7,7 +7,8 @@
 #' @export
 #'
 #' @examples
-#' talk_dplyr_function( "Sort df by  mpg", "arrange the data by mpg")
+#' cmds = c("Sort df by  mpg", "arrange the data by mpg")
+#' sapply(cmds, talk_dplyr_function)
 talk_dplyr_function = function(cmd) {
   stopifnot(rlang::is_string(cmd))
   cmd = process_cmd(cmd)

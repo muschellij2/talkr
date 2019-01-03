@@ -17,5 +17,6 @@ A string
 Determine the `dplyr` function from the command
 }
 \examples{
-talk_dplyr_function( "Sort df by  mpg", "arrange the data by mpg")
+cmds = c("Sort df by  mpg", "arrange the data by mpg")
+sapply(cmds, talk_dplyr_function)
 }

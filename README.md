@@ -41,8 +41,12 @@ library(dplyr)
 df = tibble::rownames_to_column(mtcars, var = "car")
 is.unsorted(df$mpg)
 #> [1] TRUE
-res = df %>% 
-  talk_arrange("Sort by mpg")
+res = df %>%
+  talk("Sort df by mpg")
+#> Warning in talk_arrange(.data = structure(list(car = c("Mazda RX4", "Mazda
+#> RX4 Wag", : Some words not allowed! Removed
+#> [[1]]
+#> [1] "df"  "mpg"
 is.unsorted(res$mpg)
 #> [1] FALSE
 ```
