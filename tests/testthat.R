@@ -1,0 +1,5 @@
+library(testthat)
+library(talkr)
+library(dplyr)
+library(tibble)
+test_check("talkr")

@@ -1,0 +1,20 @@
+language: R
+sudo: false
+cache: packages
+after_success: if [ "$TRAVIS_OS_NAME" == "linux" ]; then Rscript -e 'covr::codecov(type
+  = "all")'; fi
+warnings_are_errors: true
+before_deploy: if [ "$TRAVIS_OS_NAME" == "osx" ]; then rm -f *.tar.gz; fi
+r_check_args: "--as-cran --install-args=--build"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: MppBZOdm77N3zLKuVqzWTY9nkuPaZ0jmHzTWiRePM2gl4YlgMhc+PVfuOhlv6IC5khedbRgutDSNU9Oy2CR3hF3m91N5lmwxjUy5CxV+eBC0D4v5m/0HLkfGJLSb27bCr0UuH/OoQkhLeePgKkbQtGDxlEMWVKy9r1+3WhWXPpeRPq+B3zImwbEWxBz6+Bayj6ycb6zE29cqCMroOuNyEmY1wTqtGA1gcw57I9vM/Y8kEsp446bKI6x6FEvhwqurU1UhzaQgLLkZTzDC2OKSuRoBfjR+3rcMt/JPgPRGFUd4oiPxs6hAHYKgaCcNTNJTmTInH9eXO7shUKyrTb/OyVIXl4nyt5PLFgf/m2fEdObJ0ZJXA2BeJI26F/OxMR4nfh7oswHFtO/kZxSFNaRJIuNwpZjju4P2cZvHFyLYGFwyjkrz7496i5dR9fsgoBpQRbqjmiMOMhFlO5BTmxnyL5fPPtJlUNDyhp9cFjo6BqZBHgRkjezMEr9rBPy+likt6xrhm52BuBFRzXQsPIDK7E4KQhYVQxjSg6yEQ6kiCURD37kVDGVd9gkpguXGnCnFf/zcm5aVwW9uZVGUdwp+/9IBFExmx+O9UJ8ypz1Ii8GP1fHArGIjUyU/3r8mLhKvfwLgv7ra3Q2r+OGr8ddLmOlguRBvvX7fSdazntO6uUI=
+  skip_cleanup: yes
+  file_glob: yes
+  file: talkr*.t*gz
+  'on':
+    tags: yes
+    repo: muschellij2/talkr
+

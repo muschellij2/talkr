@@ -1,7 +1,7 @@
 Type: Package
 Package: talkr
 Title: Talk Through Data Analysis
-Version: 0.1.0
+Version: 0.0.0.9000
 Authors@R: 
     person(given = "John",
            family = "Muschelli",
@@ -12,6 +12,10 @@ Description: Use natural language commands to talk through data
     analysis using 'dplyr'.  Currently, natural language processing is not
     used but a simple grammar.
 License: GPL-3
+Imports: 
+    dplyr,
+    rlang,
+    tibble
 Suggests: 
     covr,
     knitr,
@@ -22,3 +26,4 @@ LazyData: true
 VignetteBuilder: knitr
 URL: https://github.com/muschellij2/talkr
 BugReports: https://github.com/muschellij2/talkr/issues
+RoxygenNote: 6.1.0

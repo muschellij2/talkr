@@ -1,0 +1,190 @@
+library(tibble)
+library(dplyr)
+library(tidyr)
+library(rlang)
+df = mtcars %>%
+  rownames_to_column(var = "car")
+
+cmds = c(
+  "Sort df by  mpg",
+  "Sort df by  column    mpg  ",
+  "arrange by column 5",
+  "arrange by columns 4 and 5",
+  "arrange by columns 4 and 5, mpg decreasing",
+  # duplciate
+  "arrange by columns 2 and 5, mpg decreasing",
+  "arrange by columns 4, 5, and 6",
+  "sort by mpg descending",
+  "sort by mpg ascending",
+  "sort by mpg ascending",
+  "sort by mpg low to high")
+# cmd = cmds[1]
+cmd = cmds
+
+trim_multi_space = function(x) {
+  x = trimws(x)
+  x = gsub("\\s+", " ", x)
+}
+
+process_cmd = function(cmd) {
+  cmd = trimws(cmd)
+  # cmd = paste(cmd, collapse = " ")
+  cmd = tolower(cmd)
+  # take out
+  cmd = trim_multi_space(cmd)
+
+  return(cmd)
+}
+
+arrange_process_cmd = function(cmd) {
+  # make ascending
+  cmd = gsub("lowest", "low", cmd)
+  cmd = gsub("highest", "high", cmd)
+  cmd = gsub("low to high", "ascending", cmd)
+  cmd = gsub("high to low", "descending", cmd)
+
+  cmd = gsub("increase", "ascending", cmd)
+  cmd = gsub("decrease", "descending", cmd)
+
+  cmd = gsub("increasing", "ascending", cmd)
+  cmd = gsub("decreasing", "descending", cmd)
+
+  #
+  cmd = gsub("variable", "column", cmd)
+  cmd = gsub("covariate", "column", cmd)
+
+  # column 1 becomes column1
+  cmd = gsub("columns", "column", cmd)
+  cmd = gsub("column (\\d+)", "column\\1", cmd)
+  cmd = gsub("column(\\D|$)", "", cmd)
+
+  # remove puncutation
+  cmd = gsub("[[:punct:][:blank:]]+", " ", cmd)
+  cmd = trim_multi_space(cmd)
+  return(cmd)
+}
+
+remove_df = function(cmd) {
+  cmd = gsub("data frame", "", cmd)
+  cmd = gsub("data[.]frame", "", cmd)
+  cmd = gsub("data set", "", cmd)
+  cmd = gsub("the data", "", cmd)
+  cmd = trim_multi_space(cmd)
+}
+
+arrange_cmd = function(cmd, df) {
+  cmd = process_cmd(cmd)
+  cmd = arrange_process_cmd(cmd)
+  cmd = remove_df(cmd)
+  cn = colnames(df)
+
+  search_words = c("sort", "arrange", "order")
+  search_str = paste0(search_words, collapse = "|")
+  stopifnot(grepl(search_str, x = cmd))
+
+
+  my_stopwords = c("the", "by", "it", "and")
+  my_stopwords = c(my_stopwords, search_words)
+  ss = strsplit(cmd, " ")
+  ss = lapply(ss, function(x) {
+    x[ !x %in% my_stopwords]
+  })
+  column_indices = function(cmd, cn) {
+    cmd = trimws(cmd)
+    ind = grepl("column", cmd)
+    ind = ind | grepl("^\\d*$", cmd)
+    if (any(ind)) {
+      xx = cmd[ind]
+      xx = gsub("column", "", xx)
+      xx = trimws(xx)
+      xx = as.numeric(xx)
+      if (any(xx > length(cn))) {
+        stop("column index > than number of column names")
+      }
+      xx = cn[xx]
+      cmd[ind] = xx
+    }
+    return(cmd)
+  }
+
+  ss = lapply(ss, column_indices, cn = cn)
+  allowed_words = c(cn, "descending", "ascending")
+
+  check = sapply(ss, function(x) {
+    all(x %in% allowed_words)
+  })
+
+  if (!all(check)) {
+    warning("Some words not allowed! Removed")
+    print(ss[!check])
+  }
+
+  # x = ss[[4]]
+
+  res = lapply(ss, function(x) {
+    x = x[x %in% allowed_words]
+    d = data_frame(
+      var = x,
+      variable = !var %in% c("descending", "ascending"),
+      var_num = cumsum(variable)
+    )
+    variables = d[ d$variable, ]
+    orders = d[ !d$variable, ]
+    orders = orders %>%
+      rename(ordering = var) %>%
+      select(ordering, var_num)
+    variables = left_join(variables, orders, by = "var_num")
+    variables = variables %>%
+      select(-variable) %>%
+      mutate(ordering = ifelse(is.na(ordering), "ascending",
+                               ordering)
+      )
+
+    s = variables %>%
+      group_by(var) %>%
+      summarize(
+        num_records = n(),
+        num_ordering = length(unique(ordering))
+      )
+    # if say ascending descending
+    if (max(s$num_ordering) > 1) {
+      warning("Multiple orderings given, first chosen")
+      print(s[ s$num_ordering > 1,])
+    }
+    variables = variables %>%
+      group_by(var) %>%
+      dplyr::slice(1)
+    variables = variables %>%
+      ungroup() %>%
+      arrange(var_num) %>%
+      mutate(var_out = ifelse(
+        ordering == "descending",
+        paste0("desc(", var, ")"),
+        var
+      ))
+    # variables = paste(variables, collapse = ", ")
+    return(variables)
+  })
+
+  out = lapply(res, function(x) {
+    x$var_out
+  })
+  out = lapply(out, rlang::expr)
+
+  # x = out[[5]]
+  out = lapply(out, function(x) {
+    arrange(df, !!! rlang::parse_exprs(x))
+  })
+
+  if (length(cmd) == 1) {
+    return(out[[1]])
+  }
+}
+
+results = arrange_cmd(cmds, df)
+
+results = arrange_cmd("Sort the data by HP", df)
+all(diff(results$hp ) >= 0)
+
+results = arrange_cmd("Sort the data by HP descending and mpg increasing", df)
+all(diff(results$hp ) <= 0)
