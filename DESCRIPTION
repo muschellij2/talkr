@@ -15,7 +15,8 @@ License: GPL-3
 Imports: 
     dplyr,
     rlang,
-    tibble
+    tibble,
+    shiny
 Suggests: 
     covr,
     knitr,

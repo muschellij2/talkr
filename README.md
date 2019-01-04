@@ -24,7 +24,7 @@ remotes::install_github("muschellij2/talkr")
 
 ## Example
 
-We will pass in a command to sort the
+We will pass in a command to sort the data set.
 
 ``` r
 library(talkr)
@@ -61,4 +61,15 @@ cmds = c(
 res = lapply(cmds, talk_arrange, .data = df)
 all.equal(res[[1]], res[[2]])
 #> [1] TRUE
+```
+
+## Shiny Example
+
+Here is a Shiny app based on
+<https://github.com/yihui/shiny-apps/tree/master/voice>, which has an
+app here: <https://yihui.shinyapps.io/voice/>. This uses the `annyang`
+API: <https://github.com/TalAter/annyang>.
+
+``` r
+talk_shiny_example("sort_better")
 ```
