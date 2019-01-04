@@ -17,7 +17,7 @@ shinyApp(
       includeScript("init.js")
     )),
     div(
-      h1("Say the word 'run' then a command that starts with 'sort' or 'arrange'"),
+      h1("Say a command that starts with 'sort' or 'arrange' or 'order'"),
       h3(
         textOutput('cmd')
       ),
