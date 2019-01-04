@@ -68,7 +68,8 @@ all.equal(res[[1]], res[[2]])
 Here is a Shiny app based on
 <https://github.com/yihui/shiny-apps/tree/master/voice>, which has an
 app here: <https://yihui.shinyapps.io/voice/>. This uses the `annyang`
-API: <https://github.com/TalAter/annyang>.
+API: <https://github.com/TalAter/annyang>. See a live demo at
+<https://jhubiostatistics.shinyapps.io/Speak_dplyr/>
 
 ``` r
 talk_shiny_example("sort_better")
