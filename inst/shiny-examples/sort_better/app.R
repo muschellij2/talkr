@@ -9,6 +9,7 @@ df = df %>%
          horsepower = hp,
          American = am,
          carburetor = carb)
+xdf = df
 
 shinyApp(
   ui = fluidPage(
@@ -22,6 +23,9 @@ shinyApp(
         textOutput('cmd')
       ),
       dataTableOutput('df'),
+      h3(
+        textOutput('cmd_clean')
+      ),
       helpText(
         'You are recommended to use Google Chrome to play with this app.',
         'To change the title, say something that starts with "sort" or arrange, e.g.',
@@ -45,13 +49,18 @@ shinyApp(
       if (cmd == "say run something") {
         cmd = ""
       }
+      print(cmd)
       cmd
     })
 
     resulting_df = reactive({
       cmd = get_cmd()
-      df <<- df %>%
-        talk(cmd, error_find_function = FALSE)
+      if (grepl("^reset", cmd)) {
+        df <<- xdf
+      } else {
+        df <<- df %>%
+          talk(cmd, error_find_function = FALSE)
+      }
       df
     })
 
@@ -61,6 +70,17 @@ shinyApp(
     })
     output$cmd = renderText({
       paste0("Your command is: ", get_cmd())
+    })
+    output$cmd_clean = renderText({
+      cmd = get_cmd()
+      if (grepl("^reset", cmd)) {
+        res = "reset"
+      } else {
+        res <- df %>%
+          talk_expr(cmd, error_find_function = FALSE)
+        res = paste0(res$func, "(", res$expression, ")")
+      }
+      paste0("Your clean command is: ", res)
     })
   }
 )

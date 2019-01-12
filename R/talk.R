@@ -23,8 +23,9 @@ talk = function(.data, cmd, error_find_function = TRUE, ...) {
   func = talk_dplyr_function(cmd)
   if (func == "") {
     if (error_find_function) {
-      stop("Function not determined from command")
+      stop("dplyr Function not determined from command")
     } else {
+      print("couldn't find function")
       return(.data)
     }
   }
@@ -32,3 +33,27 @@ talk = function(.data, cmd, error_find_function = TRUE, ...) {
   res = do.call(talk_func, args = list(.data = .data, cmd = cmd, ...))
   return(res)
 }
+
+#' @export
+talk_expr = function(.data, cmd, error_find_function = TRUE, ...) {
+  stopifnot(rlang::is_string(cmd))
+  cmd = process_cmd(cmd)
+  func = talk_dplyr_function(cmd)
+  if (func == "") {
+    if (error_find_function) {
+      stop("dplyr Function not determined from command")
+    } else {
+      print("couldn't find function")
+      return(.data)
+    }
+  }
+  talk_func = paste0("talk_", func, "_expr")
+  res = do.call(talk_func, args = list(data_colnames = .data, cmd = cmd, ...))
+  if (func %in% "filter") {
+    res = res$condition
+  }
+  L = list(expression = res,
+           func = func)
+  return(L)
+}
+

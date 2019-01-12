@@ -50,6 +50,8 @@ shinyApp(
 
     resulting_df = reactive({
       cmd = get_cmd()
+      # stupid words
+      cmd = gsub("column for", "column 4", cmd)
       df <<- df %>%
         talk(cmd, error_find_function = FALSE)
       df

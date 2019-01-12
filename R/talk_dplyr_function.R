@@ -21,6 +21,13 @@ talk_dplyr_function = function(cmd) {
   select_words = c("select", "grab", "keep", "subset")
   select_words = c(select_words, "order column(s|)\\s*(the|)\\s*by")
 
+  first_word = strsplit(cmd, " ")[[1]]
+  first_word = first_word[1]
+  if (first_word %in% c("select", "arrange", "filter",
+                        "mutate", "group_by", "summarize",
+                        "rename")) {
+    dplyr_func = first_word
+  }
   # if (grepl(" all ", cmd)) {
   #   dplyr_func = paste0(dplyr_func, "_all")
   # }

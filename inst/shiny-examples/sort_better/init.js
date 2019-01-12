@@ -7,11 +7,22 @@ if (annyang) {
   arrange = function(command) {
       inputFunc(command, 'arrange');
   };
+  filter = function(command) {
+      inputFunc(command, 'filter');
+  };
+  reset = function() {
+      inputFunc('', 'reset');
+  };
 
   var commands3 = {
     'sort *command': arrange,
     'arrange *command': arrange,
-    'order *command': arrange
+    'order *command': arrange,
+    'subset row *command': filter,
+    'subset rows *command': filter,
+    'grab rows *command': filter,
+    'filter *command': filter,
+    'reset': reset
   } ;
   var commands = {
     'title *title': function(title) {

@@ -2,15 +2,33 @@
 % Please edit documentation in R/talk_arrange.R
 \name{talk_arrange}
 \alias{talk_arrange}
+\alias{talk_arrange_expr}
+\alias{talk_get_colnames}
+\alias{talk_process_arrange_cmd}
 \title{Talk to Arrange a Data set}
 \usage{
-talk_arrange(.data, cmd)
+talk_arrange(.data, cmd, verbose = FALSE, ...)
+
+talk_arrange_expr(data_colnames, cmd, ...)
+
+talk_get_colnames(data_colnames, cmd, stop_words = c("sort", "arrange",
+  "order", "group", "filter", "mutate", "subset", "select", "count",
+  "transmute", "summarize", "summarise", "missing", "infinite", "finite",
+  "nan", "not a number"))
+
+talk_process_arrange_cmd(cmd)
 }
 \arguments{
 \item{.data}{The data set/\code{data.frame} to
 perform the operation.}
 
 \item{cmd}{Command to perform on the data set.}
+
+\item{verbose}{print diagnostic output}
+
+\item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}}
+
+\item{stop_words}{Words to remove from the command}
 }
 \value{
 A \code{data.frame} or list of them if \code{length(cmds) > 1}.
@@ -24,8 +42,8 @@ library(dplyr)
 df = mtcars \%>\%
   rownames_to_column(var = "car")
   cmds = c(
-    "Sort df by  mpg",
-    "Sort df by  column    mpg  ",
+    "Sort by  mpg",
+    "Sort by  column    mpg  ",
     "arrange by column 5",
     "arrange by gear",
     "arrange by columns 4 and 5",
