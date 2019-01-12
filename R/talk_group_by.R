@@ -54,6 +54,7 @@ talk_group_by = function(.data, cmd, verbose = FALSE, ...) {
 
 #' @export
 #' @rdname talk_group_by
+#' @param data_colnames column names of the data
 talk_group_by_expr  = function(data_colnames, cmd, ...) {
   res = talk_get_colnames(data_colnames, cmd, ...)
   out = lapply(res, function(x) {

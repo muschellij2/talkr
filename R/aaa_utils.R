@@ -1,3 +1,14 @@
+fix_contractions = function(cmd) {
+  cmd = gsub("doesn't", "do not", cmd)
+  cmd = gsub("don't", "do not", cmd)
+  # be verbs
+  cmd = gsub(" isn't", "are not", cmd)
+  cmd = gsub(" aren't", "are not", cmd)
+  cmd = gsub(" weren't", "are not", cmd)
+  cmd = gsub(" cannot", "are not", cmd)
+  cmd
+}
+
 trim_multi_space = function(x) {
   x = trimws(x)
   x = gsub("\\s+", " ", x)

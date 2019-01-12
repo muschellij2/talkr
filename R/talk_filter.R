@@ -40,9 +40,12 @@
 #'         "filter the rows where American is not less than or equal 0",
 #'         "return the data with values of cylinders not less than 4",
 #'         "filter where cylinders are not missing",
+#'         "filter if cylinders isn't missing",
 #'         "filter so gear equal 6")
 #'  cmd = "filter where cylinders are not missing"
 #'  data_colnames = colnames(df)
+#'  exprs = lapply(cmds, talk_filter_expr, data_colnames = df)
+#'  exprs = sapply(exprs, function(x) x$condition)
 #'  results = lapply(cmds, talk_filter, .data = df)
 #'  cyl = df %>%
 #'  talk_filter("filter if cylinders is equal to 6")
@@ -76,6 +79,7 @@ talk_filter = function(.data, cmd,
 }
 
 #' @export
+#' @rdname talk_filter
 talk_filter_expr = function(data_colnames, cmd) {
 
   is_not = NULL
@@ -93,6 +97,7 @@ talk_filter_expr = function(data_colnames, cmd) {
   cn = tolower(data_colnames)
 
   cmd = process_cmd(cmd, drop_punct = FALSE)
+  cmd = fix_contractions(cmd)
   cmd = remove_punct_keep_ops(cmd)
   cmd = talk_process_filter_cmd(cmd)
   cmd = remove_df(cmd)
@@ -220,6 +225,7 @@ is_condition_not = function(cmd) {
 
 
 #' @export
+#' @rdname talk_filter
 talk_process_filter_cmd = function(cmd) {
   # cmd = c("and then", "greater then", "then")
   # cmd = gsub("([^and] | |^)then", "\\1than", cmd)
@@ -238,21 +244,11 @@ talk_process_filter_cmd = function(cmd) {
   cmd = gsub("^(give|give me|give us|return) (back |)row[[:alpha:]]",
              "filter", cmd)
 
+  cmd = gsub(" were ", " are ", cmd)
+  cmd = sub("^do ", "", cmd)
 
   cmd = gsub("lower", "less", cmd)
   cmd = gsub("fewer", "less", cmd)
-
-  cmd = gsub("doesn't", "do not", cmd)
-  cmd = gsub("don't", "do not", cmd)
-  # be verbs
-  cmd = gsub(" isn't", "are not", cmd)
-  cmd = gsub(" aren't", "are not", cmd)
-  cmd = gsub(" weren't", "are not", cmd)
-  cmd = gsub(" cannot", "are not", cmd)
-  cmd = gsub(" were ", " are ", cmd)
-
-  cmd = sub("^do ", "", cmd)
-
 
   cmd = gsub("not greater", "less", cmd)
   cmd = gsub("not less", "greater", cmd)

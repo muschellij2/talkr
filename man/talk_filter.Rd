@@ -2,9 +2,15 @@
 % Please edit documentation in R/talk_filter.R
 \name{talk_filter}
 \alias{talk_filter}
+\alias{talk_filter_expr}
+\alias{talk_process_filter_cmd}
 \title{Talk to Filter a Data set}
 \usage{
 talk_filter(.data, cmd, verbose = FALSE)
+
+talk_filter_expr(data_colnames, cmd)
+
+talk_process_filter_cmd(cmd)
 }
 \arguments{
 \item{.data}{The data set/\code{data.frame} to
@@ -38,9 +44,12 @@ cmds = c("subset rows, by horsepower > 100",
         "filter the rows where American is not less than or equal 0",
         "return the data with values of cylinders not less than 4",
         "filter where cylinders are not missing",
+        "filter if cylinders isn't missing",
         "filter so gear equal 6")
  cmd = "filter where cylinders are not missing"
  data_colnames = colnames(df)
+ exprs = lapply(cmds, talk_filter_expr, data_colnames = df)
+ exprs = sapply(exprs, function(x) x$condition)
  results = lapply(cmds, talk_filter, .data = df)
  cyl = df \%>\%
  talk_filter("filter if cylinders is equal to 6")

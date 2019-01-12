@@ -21,6 +21,8 @@ perform the operation.}
 \item{verbose}{print diagnostic output}
 
 \item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}}
+
+\item{data_colnames}{column names of the data}
 }
 \value{
 A \code{data.frame} or list of them if \code{length(cmds) > 1}.

@@ -2,9 +2,12 @@
 % Please edit documentation in R/talk.R
 \name{talk}
 \alias{talk}
+\alias{talk_expr}
 \title{Main function to "talk" to \code{dplyr}}
 \usage{
 talk(.data, cmd, error_find_function = TRUE, ...)
+
+talk_expr(.data, cmd, error_find_function = TRUE, ...)
 }
 \arguments{
 \item{.data}{A \code{data.frame} to perform the commands on}

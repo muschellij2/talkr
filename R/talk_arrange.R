@@ -55,6 +55,7 @@ talk_arrange = function(.data, cmd, verbose = FALSE, ...) {
 
 #' @export
 #' @rdname talk_arrange
+#' @param data_colnames column names of the data
 talk_arrange_expr  = function(data_colnames, cmd, ...) {
   res = talk_get_colnames(data_colnames, cmd, ...)
   out = lapply(res, function(x) {

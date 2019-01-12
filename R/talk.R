@@ -35,6 +35,7 @@ talk = function(.data, cmd, error_find_function = TRUE, ...) {
 }
 
 #' @export
+#' @rdname talk
 talk_expr = function(.data, cmd, error_find_function = TRUE, ...) {
   stopifnot(rlang::is_string(cmd))
   cmd = process_cmd(cmd)

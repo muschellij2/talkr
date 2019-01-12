@@ -28,6 +28,8 @@ perform the operation.}
 
 \item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}}
 
+\item{data_colnames}{column names of the data}
+
 \item{stop_words}{Words to remove from the command}
 }
 \value{
