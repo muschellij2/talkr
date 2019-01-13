@@ -14,6 +14,7 @@
 #' @param .data The data set/\code{data.frame} to
 #' perform the operation.
 #' @param verbose print diagnostic output
+#' @param ... additional arguments to pass to \code{\link{talk_get_colnames}}
 #'
 #' @return A \code{data.frame} or list of them if \code{length(cmds) > 1}.
 #' @export
@@ -68,7 +69,7 @@ talk_filter = function(.data, cmd,
   # x = out[[5]]
   colnames(.data) = tolower(data_colnames)
   out = lapply(out, function(x) {
-    ret = filter(.data = .data, !!!friendlyeval::treat_string_as_exprs(x))
+    ret = filter(.data = .data, !!!friendlyeval::treat_strings_as_exprs(x))
     colnames(ret) = data_colnames
     ret
   })
@@ -82,7 +83,7 @@ talk_filter = function(.data, cmd,
 #' @export
 #' @rdname talk_filter
 #' @param data_colnames column names of the data
-talk_filter_expr = function(data_colnames, cmd) {
+talk_filter_expr = function(data_colnames, cmd, ...) {
 
   is_not = NULL
   rm(list = "is_not")

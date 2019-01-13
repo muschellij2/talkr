@@ -8,7 +8,7 @@
 \usage{
 talk_filter(.data, cmd, verbose = FALSE, ...)
 
-talk_filter_expr(data_colnames, cmd)
+talk_filter_expr(data_colnames, cmd, ...)
 
 talk_process_filter_cmd(cmd)
 }
@@ -19,6 +19,8 @@ perform the operation.}
 \item{cmd}{Command to perform on the data set.}
 
 \item{verbose}{print diagnostic output}
+
+\item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}}
 
 \item{data_colnames}{column names of the data}
 }

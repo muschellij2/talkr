@@ -69,8 +69,8 @@ talk_select_expr = function(data_colnames, cmd, ...) {
 
   # res = talk_get_colnames(data_colnames, cmd, ...)
 
-  is_not = NULL
-  rm(list = "is_not")
+  df_var = var_num = is_not = NULL
+  rm(list = c("is_not", "df_var", "var_num"))
   if (is.data.frame(data_colnames)) {
     data_colnames = colnames(data_colnames)
   }
