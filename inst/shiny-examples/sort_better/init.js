@@ -10,17 +10,38 @@ if (annyang) {
   filter = function(command) {
       inputFunc(command, 'filter');
   };
+  not_filter = function(command) {
+      inputFunc(command, 'filter out');
+  };
+  group_by = function(command) {
+      inputFunc(command, 'group_by');
+  };
   reset = function() {
       inputFunc('', 'reset');
   };
+
 
   var commands3 = {
     'sort *command': arrange,
     'arrange *command': arrange,
     'order *command': arrange,
+    'group by *command': group_by,
+    'group *command': group_by,
+
     'subset row *command': filter,
     'subset rows *command': filter,
     'grab rows *command': filter,
+    'keep rows *command': filter,
+    'drop rows *command': not_filter,
+    'remove rows *command': not_filter,
+
+    'subset rose *command': filter,
+    'subset rose *command': filter,
+    'grab rose *command': filter,
+    'keep rose *command': filter,
+    'drop rose *command': not_filter,
+    'remove rose *command': not_filter,
+
     'filter *command': filter,
     'reset': reset
   } ;

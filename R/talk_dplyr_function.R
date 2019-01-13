@@ -11,7 +11,9 @@
 #' sapply(cmds, talk_dplyr_function)
 talk_dplyr_function = function(cmd) {
   stopifnot(rlang::is_string(cmd))
+  cmd = gsub("group_by", "groupby", tolower(cmd))
   cmd = process_cmd(cmd)
+  cmd = gsub("groupby", "group_by", cmd)
   search_words = c("sort", "arrange", "order")
   search_str = paste0(search_words, collapse = "|")
   dplyr_func = ""

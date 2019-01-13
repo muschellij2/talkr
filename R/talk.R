@@ -19,8 +19,8 @@
 #'   talk("Sort df by mpg")
 talk = function(.data, cmd, error_find_function = TRUE, ...) {
   stopifnot(rlang::is_string(cmd))
-  cmd = process_cmd(cmd)
   func = talk_dplyr_function(cmd)
+  cmd = process_cmd(cmd)
   if (func == "") {
     if (error_find_function) {
       stop("dplyr Function not determined from command")

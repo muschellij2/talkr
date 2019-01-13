@@ -26,6 +26,9 @@ shinyApp(
       h3(
         textOutput('cmd_clean')
       ),
+      h3(
+        textOutput('group_vars')
+      ),
       helpText(
         'You are recommended to use Google Chrome to play with this app.',
         'To change the title, say something that starts with "sort" or arrange, e.g.',
@@ -55,6 +58,7 @@ shinyApp(
 
     resulting_df = reactive({
       cmd = get_cmd()
+      cmd = sub("^group by", "group_by", cmd)
       if (grepl("^reset", cmd)) {
         df <<- xdf
       } else {
@@ -68,7 +72,19 @@ shinyApp(
       print(input$command)
       resulting_df()
     })
+    output$group_vars = renderText({
+      df = resulting_df()
+      gv = dplyr::group_vars(df)
+      # print(gv)
+      # print(head(df))
+      if (length(gv) == 0) {
+        gv = ""
+      }
+      gv = paste(gv, collapse = ", ")
+      paste0("Group vars:", gv)
+    })
     output$cmd = renderText({
+      print(get_cmd())
       paste0("Your command is: ", get_cmd())
     })
     output$cmd_clean = renderText({

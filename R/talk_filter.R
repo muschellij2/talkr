@@ -209,7 +209,8 @@ is_condition_not = function(cmd) {
                 "remove row",
                 "drop (|out )row",
                 "remove",
-                "drop")
+                "drop", "not filter",
+                "not keep", "do not keep")
   terms = paste(all_terms, collapse = "|")
   terms = paste0("^", terms)
   not_condition = grepl(terms, cmd)
