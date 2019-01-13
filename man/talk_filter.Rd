@@ -6,7 +6,7 @@
 \alias{talk_process_filter_cmd}
 \title{Talk to Filter a Data set}
 \usage{
-talk_filter(.data, cmd, verbose = FALSE)
+talk_filter(.data, cmd, verbose = FALSE, ...)
 
 talk_filter_expr(data_colnames, cmd)
 
@@ -19,6 +19,8 @@ perform the operation.}
 \item{cmd}{Command to perform on the data set.}
 
 \item{verbose}{print diagnostic output}
+
+\item{data_colnames}{column names of the data}
 }
 \value{
 A \code{data.frame} or list of them if \code{length(cmds) > 1}.

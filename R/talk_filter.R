@@ -51,13 +51,14 @@
 #'  talk_filter("filter if cylinders is equal to 6")
 #' testthat::expect_true(all(cyl$cylinders == 6))
 talk_filter = function(.data, cmd,
-                       verbose = FALSE) {
+                       verbose = FALSE,
+                       ...) {
   if (verbose) {
     message("call to talk_filter")
   }
   # stopifnot(rlang::is_string(cmd))
   data_colnames = colnames(.data)
-  out = talk_filter_expr(data_colnames, cmd)
+  out = talk_filter_expr(data_colnames, cmd, ...)
 
   out = out$condition
   if (verbose) {
@@ -67,7 +68,7 @@ talk_filter = function(.data, cmd,
   # x = out[[5]]
   colnames(.data) = tolower(data_colnames)
   out = lapply(out, function(x) {
-    ret = filter(.data = .data, !!friendlyeval::treat_string_as_expr(x))
+    ret = filter(.data = .data, !!!friendlyeval::treat_string_as_exprs(x))
     colnames(ret) = data_colnames
     ret
   })
@@ -80,6 +81,7 @@ talk_filter = function(.data, cmd,
 
 #' @export
 #' @rdname talk_filter
+#' @param data_colnames column names of the data
 talk_filter_expr = function(data_colnames, cmd) {
 
   is_not = NULL
@@ -106,16 +108,15 @@ talk_filter_expr = function(data_colnames, cmd) {
   if (any(bad)) {
     cmd[bad] = paste0("filter condition ", cmd[bad])
   }
-  # if (!grepl("condition", cmd)) {
-  # stop("No condition found!")
-  # }
+
+
 
   split_condition = strsplit(cmd, split = "condition")
   split_condition = lapply(split_condition, trimws)
   split_condition = t(sapply(split_condition, function(x) {
     x = x[ !x %in% ""]
     x = c(x[1], paste(x[2:length(x)], collapse = " "))
-    res = is_condition_not(x[1])
+    res = is_condition_not(x[1], clean_cmd = "filter")
     c(x, res$not_condition, res$clean_cmd, res$cmd)
   }))
   colnames(split_condition) = c("command", "condition",
@@ -137,6 +138,7 @@ talk_filter_expr = function(data_colnames, cmd) {
                    "with", "values", "a",
                    "is", "of",
                    "in",
+                   "up",
                    "there",
                    "are",
                    "filter",
@@ -199,29 +201,8 @@ talk_filter_expr = function(data_colnames, cmd) {
                          condition,
                          ifelse(is_not, ")", ""))
     )
-  # out = lapply(split_condition$condition, rlang::expr)
-  # out = lapply(split_condition$condition, rlang::sym)
-  return(split_condition)
-}
 
-is_condition_not = function(cmd) {
-  all_terms = c("filter out",
-                "remove row",
-                "drop (|out )row",
-                "remove",
-                "drop", "not filter",
-                "not keep", "do not keep")
-  terms = paste(all_terms, collapse = "|")
-  terms = paste0("^", terms)
-  not_condition = grepl(terms, cmd)
-  for (iterm in all_terms) {
-    cmd = gsub(iterm, "filter", cmd)
-  }
-  L = list(
-    not_condition = not_condition,
-    clean_cmd = "filter",
-    cmd = cmd)
-  return(L)
+  return(split_condition)
 }
 
 

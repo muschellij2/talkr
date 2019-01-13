@@ -31,6 +31,9 @@
 #'  data_colnames = df
 #'  .data = df
 #'  results = lapply(cmds, talk_group_by, .data = df)
+#'  cmd =  "group by columns 2 and 5, mpg decreasing"
+#'  testthat::expect_warning(talk_group_by(.data, cmd),
+#'  "orderings")
 #' df = df %>%
 #'   rename(GEAR = gear)
 #'  gear = df %>%
@@ -39,10 +42,10 @@
 talk_group_by = function(.data, cmd, verbose = FALSE, ...) {
 
   data_colnames = colnames(.data)
-  out = talk_group_by_expr(data_colnames, cmd)
+  out = talk_group_by_expr(data_colnames, cmd, ...)
 
   out = lapply(out, function(x) {
-    group_by(.data = .data, !!! rlang::parse_exprs(x))
+    group_by(.data = .data, !!! x)
   })
 
   if (length(cmd) == 1) {
@@ -60,7 +63,7 @@ talk_group_by_expr  = function(data_colnames, cmd, ...) {
   out = lapply(res, function(x) {
     x$df_var
   })
-  out = lapply(out, rlang::expr)
+  out = lapply(out, friendlyeval::treat_strings_as_exprs)
 }
 
 

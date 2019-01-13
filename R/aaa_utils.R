@@ -62,3 +62,33 @@ remove_df = function(cmd) {
 }
 
 
+
+is_condition_not = function(cmd, clean_cmd = "filter") {
+  all_terms = c("filter out",
+                "subset out",
+                "select out",
+                "remove row",
+                "remove column",
+                "drop (|out |off )row",
+                "drop (|out |off )column",
+                "remove",
+                "drop",
+                "get rid of",
+                "not select",
+                "not filter",
+                "not keep",
+                "do not keep")
+  terms = paste(all_terms, collapse = "|")
+  terms = paste0("^", terms)
+  not_condition = grepl(terms, cmd)
+  for (iterm in all_terms) {
+    cmd = gsub(iterm, paste0(clean_cmd, " "), cmd)
+  }
+  cmd = trim_multi_space(cmd)
+  L = list(
+    not_condition = not_condition,
+    clean_cmd = clean_cmd,
+    cmd = cmd)
+  return(L)
+}
+

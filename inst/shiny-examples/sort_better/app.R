@@ -10,6 +10,7 @@ df = df %>%
          American = am,
          carburetor = carb)
 xdf = df
+L = list(xdf)
 
 shinyApp(
   ui = fluidPage(
@@ -58,14 +59,24 @@ shinyApp(
 
     resulting_df = reactive({
       cmd = get_cmd()
-      cmd = sub("^group by", "group_by", cmd)
-      if (grepl("^reset", cmd)) {
-        df <<- xdf
-      } else {
-        df <<- df %>%
-          talk(cmd, error_find_function = FALSE)
+      if (!cmd %in% "") {
+        cmd = sub("^group by", "group_by", cmd)
+        if (grepl("^reset", cmd)) {
+          df <<- xdf
+          L <<- list(df)
+        } else if (grepl("undo", cmd)) {
+          L <<- L[-1]
+          if (length(L) == 0) {
+            L <<- list(df)
+          }
+        } else {
+          df <<- df %>%
+            talk(cmd, error_find_function = FALSE)
+          L <<- c(list(df), L)
+        }
       }
-      df
+      print(class(L[[1]]))
+      L[[1]]
     })
 
     output$df = renderDataTable({

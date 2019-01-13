@@ -52,6 +52,9 @@ df = mtcars \%>\%
  data_colnames = df
  .data = df
  results = lapply(cmds, talk_group_by, .data = df)
+ cmd =  "group by columns 2 and 5, mpg decreasing"
+ testthat::expect_warning(talk_group_by(.data, cmd),
+ "orderings")
 df = df \%>\%
   rename(GEAR = gear)
  gear = df \%>\%

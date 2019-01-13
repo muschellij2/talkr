@@ -68,6 +68,9 @@ talk_arrange_expr  = function(data_colnames, cmd, ...) {
 #' @rdname talk_arrange
 #'
 #' @param stop_words Words to remove from the command
+#' @param additional_stop_words additional stop words to
+#' remove.  Helpful if you want to pass in these words
+#' instead of with \code{stop_words}
 talk_get_colnames = function(
   data_colnames, cmd,
   stop_words = c("sort", "arrange", "order",
@@ -76,7 +79,9 @@ talk_get_colnames = function(
                  "count", "transmute",
                  "summarize", "summarise",
                  "missing", "infinite", "finite",
-                 "nan", "not a number")
+                 "covariate", "variable",
+                 "nan", "not a number"),
+  additional_stop_words = NULL
   ) {
   var = variable = NULL
   ordering = var_num = df_var = NULL
@@ -107,8 +112,15 @@ talk_get_colnames = function(
   # stopifnot(grepl(search_str, x = cmd))
 
 
-  my_stopwords = c("the", "by", "it", "and", "then")
-  my_stopwords = c(my_stopwords, stop_words)
+  # my_stopwords = c("the", "by", "it", "and", "then")
+  my_stopwords = c("the", "by", "it", "and", "then",
+                   "there",
+                   "row",
+                   "up",
+                   "if",
+                   "rows", "want",
+                   "are")
+  my_stopwords = c(my_stopwords, stop_words, additional_stop_words)
   my_stopwords = unique(my_stopwords)
   if (any(my_stopwords %in% cn)) {
     warning(
@@ -201,15 +213,10 @@ talk_get_colnames = function(
         paste0("desc(", df_var, ")"),
         df_var
       ))
-    # mutate(var_out = ifelse(
-    #   ordering == "descending",
-    #   paste0("desc(", var, ")"),
-    #   var
-    # ))
-    # variables = paste(variables, collapse = ", ")
+
     return(variables)
   })
-
+  return(res)
 }
 
 #' @export

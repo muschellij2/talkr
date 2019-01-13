@@ -14,7 +14,8 @@ talk_arrange_expr(data_colnames, cmd, ...)
 talk_get_colnames(data_colnames, cmd, stop_words = c("sort", "arrange",
   "order", "group", "filter", "mutate", "subset", "select", "count",
   "transmute", "summarize", "summarise", "missing", "infinite", "finite",
-  "nan", "not a number"))
+  "covariate", "variable", "nan", "not a number"),
+  additional_stop_words = NULL)
 
 talk_process_arrange_cmd(cmd)
 }
@@ -31,6 +32,10 @@ perform the operation.}
 \item{data_colnames}{column names of the data}
 
 \item{stop_words}{Words to remove from the command}
+
+\item{additional_stop_words}{additional stop words to
+remove.  Helpful if you want to pass in these words
+instead of with \code{stop_words}}
 }
 \value{
 A \code{data.frame} or list of them if \code{length(cmds) > 1}.
