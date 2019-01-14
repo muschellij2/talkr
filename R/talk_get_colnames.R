@@ -47,11 +47,16 @@
 #'
 talk_get_colnames = function(
   data_colnames, cmd,
-  stop_words = talk_stop_words,
+  stop_words = talkr::talk_stop_words,
   additional_stop_words = NULL,
   remove_duplicated = TRUE,
   allowed_words = c("descending", "ascending")
 ) {
+
+  var = variable = NULL
+  ordering = var_num = df_var = NULL
+  rm(list = c("var", "variable", "ordering", "var_num", "df_var"))
+
 
   # stopifnot(rlang::is_string(cmd))
   cmd = process_cmd(cmd)
@@ -125,7 +130,7 @@ talk_get_colnames = function(
 #' @rdname talk_get_colnames
 talk_cmd_to_colnames = function(
   data_colnames, cmd,
-  stop_words = talk_stop_words,
+  stop_words = talkr::talk_stop_words,
   additional_stop_words = NULL
 ) {
 

@@ -40,6 +40,9 @@
 #'  gear = df %>%
 #'  talk_arrange("arrange by gear")
 #' testthat::expect_true(!is.unsorted(gear$GEAR))
+#'  gear = df %>%
+#'  talk_arrange("arrange by gear decreasing")
+#' testthat::expect_true(all(diff(gear$GEAR) <= 0))
 talk_arrange = function(.data, cmd, verbose = FALSE, ...) {
 
   data_colnames = colnames(.data)
@@ -106,9 +109,12 @@ talk_arrange_expr  = function(data_colnames, cmd, ...) {
     variables = variables %>%
       group_by(var) %>%
       dplyr::slice(1)
-    variables = left_join(
-      variables,
-      cn_df, by = "var")
+
+    variables = variables %>%
+      mutate(df_var = var)
+    # variables = left_join(
+    #   variables,
+    #   cn_df, by = "var")
 
     variables = variables %>%
       ungroup() %>%
