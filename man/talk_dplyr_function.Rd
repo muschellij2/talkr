@@ -18,5 +18,6 @@ Determine the `dplyr` function from the command
 }
 \examples{
 cmds = c("Sort df by  mpg", "arrange the data by mpg", "group_by mpg")
-sapply(cmds, talk_dplyr_function)
+res = sapply(cmds, talk_dplyr_function)
+testthat::expect_true(talk_dplyr_function("group_by MPG") == "group_by")
 }

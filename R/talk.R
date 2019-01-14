@@ -38,7 +38,6 @@ talk = function(.data, cmd, error_find_function = TRUE, ...) {
 #' @rdname talk
 talk_expr = function(.data, cmd, error_find_function = TRUE, ...) {
   stopifnot(rlang::is_string(cmd))
-  cmd = process_cmd(cmd)
   func = talk_dplyr_function(cmd)
   if (func == "") {
     if (error_find_function) {

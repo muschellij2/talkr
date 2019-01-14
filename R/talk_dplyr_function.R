@@ -8,12 +8,11 @@
 #'
 #' @examples
 #' cmds = c("Sort df by  mpg", "arrange the data by mpg", "group_by mpg")
-#' sapply(cmds, talk_dplyr_function)
+#' res = sapply(cmds, talk_dplyr_function)
+#' testthat::expect_true(talk_dplyr_function("group_by MPG") == "group_by")
 talk_dplyr_function = function(cmd) {
   stopifnot(rlang::is_string(cmd))
-  cmd = gsub("group_by", "groupby", tolower(cmd))
   cmd = process_cmd(cmd)
-  cmd = gsub("groupby", "group_by", cmd)
   search_words = c("sort", "arrange", "order")
   search_str = paste0(search_words, collapse = "|")
   dplyr_func = ""

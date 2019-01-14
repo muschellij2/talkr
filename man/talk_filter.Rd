@@ -4,6 +4,7 @@
 \alias{talk_filter}
 \alias{talk_filter_expr}
 \alias{talk_process_filter_cmd}
+\alias{talk_colnames_class}
 \title{Talk to Filter a Data set}
 \usage{
 talk_filter(.data, cmd, verbose = FALSE, ...)
@@ -11,6 +12,8 @@ talk_filter(.data, cmd, verbose = FALSE, ...)
 talk_filter_expr(data_colnames, cmd, ...)
 
 talk_process_filter_cmd(cmd)
+
+talk_colnames_class(.data)
 }
 \arguments{
 \item{.data}{The data set/\code{data.frame} to
@@ -45,6 +48,7 @@ cmds = c("subset rows, by horsepower > 100",
         "drop rows where American is equal to 1",
         "drop rows where American is equal 1",
         "drop values in column 6 not equal to 4",
+        "filter out MPG greater than 30",
         "filter the rows where American is not less than or equal 0",
         "return the data with values of cylinders not less than 4",
         "filter where cylinders are not missing",
@@ -58,4 +62,5 @@ cmds = c("subset rows, by horsepower > 100",
  cyl = df \%>\%
  talk_filter("filter if cylinders is equal to 6")
 testthat::expect_true(all(cyl$cylinders == 6))
+talk_colnames_class(cyl)
 }

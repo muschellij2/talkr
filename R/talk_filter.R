@@ -38,6 +38,7 @@
 #'         "drop rows where American is equal to 1",
 #'         "drop rows where American is equal 1",
 #'         "drop values in column 6 not equal to 4",
+#'         "filter out MPG greater than 30",
 #'         "filter the rows where American is not less than or equal 0",
 #'         "return the data with values of cylinders not less than 4",
 #'         "filter where cylinders are not missing",
@@ -51,6 +52,7 @@
 #'  cyl = df %>%
 #'  talk_filter("filter if cylinders is equal to 6")
 #' testthat::expect_true(all(cyl$cylinders == 6))
+#' talk_colnames_class(cyl)
 talk_filter = function(.data, cmd,
                        verbose = FALSE,
                        ...) {
@@ -142,6 +144,7 @@ talk_filter_expr = function(data_colnames, cmd, ...) {
                    "up",
                    "there",
                    "are",
+                   "out",
                    "filter",
                    "subset",
                    "so", "that",
@@ -302,6 +305,13 @@ talk_process_filter_cmd = function(cmd) {
   cmd = gsub(" value(s|) ", " condition ", cmd)
   cmd = gsub(" row(s|) ", " row ", cmd)
 
+
+  bad = !grepl("condition", cmd)
+  if (any(bad)) {
+    cmd[bad] = gsub("(^| )(out|drop|keep|remove) ", " \\1 condition ", cmd[bad])
+    cmd[bad] = trimws(cmd[bad])
+  }
+
   #
   cmd = gsub("variable", "column", cmd)
   cmd = gsub("covariate", "column", cmd)
@@ -314,3 +324,15 @@ talk_process_filter_cmd = function(cmd) {
 
   return(cmd)
 }
+
+
+#' @export
+#' @rdname talk_filter
+talk_colnames_class = function(.data) {
+
+  cn_df = talk_check_colnames(.data)
+  cn_df = cn_df$colname_df
+  cn_df$classes = sapply(.data, class)
+  cn_df
+}
+

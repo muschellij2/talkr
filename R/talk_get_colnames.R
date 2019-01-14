@@ -205,4 +205,3 @@ talk_check_colnames = function(data_colnames) {
            colname_df = cn_df)
   L
 }
-

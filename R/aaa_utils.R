@@ -26,10 +26,13 @@ process_cmd = function(
   # take out
   cmd = trim_multi_space(cmd)
 
-  # remove puncutation
+  cmd = gsub("group_by", "groupby", cmd)
+  # remove punctutation
   string = paste0("[", ifelse(drop_punct, "[:punct:]", ""),
                   "[:blank:]]+")
   cmd = gsub(string, " ", cmd)
+  cmd = gsub("groupby", "group_by", cmd)
+
   cmd = trim_multi_space(cmd)
   return(cmd)
 }
