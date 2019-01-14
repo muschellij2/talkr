@@ -7,7 +7,7 @@
 \usage{
 talk_count(.data, cmd, verbose = FALSE, ...)
 
-talk_count_expr(data_colnames, cmd, ...)
+talk_count_expr(data_colnames, cmd, allowed_words = "", ...)
 }
 \arguments{
 \item{.data}{The data set/\code{data.frame} to
@@ -20,6 +20,9 @@ perform the operation.}
 \item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}}
 
 \item{data_colnames}{column names of the data}
+
+\item{allowed_words}{words allowed to be in the command other than
+the column names}
 }
 \value{
 A \code{data.frame} or list of them if \code{length(cmds) > 1}.
@@ -34,13 +37,16 @@ df = mtcars \%>\%
   rownames_to_column(var = "car")
   cmds = c(
     "count by  mpg",
-    "count up mpg, hp")
+    "count up mpg, hp",
+    "count up mpg, hp, mpg")
  data_colnames = df
  .data = df
  results = lapply(cmds, talk_count, .data = df)
 df = df \%>\%
   rename(GEAR = gear)
+data_colnames = df
+cmd = "count by gear "
  gear = df \%>\%
- talk_count("arrange by gear ")
+ talk_count("count by gear ")
 testthat::expect_true(all(colnames(gear) == c("GEAR", "n")))
 }

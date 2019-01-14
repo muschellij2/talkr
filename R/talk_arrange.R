@@ -17,7 +17,8 @@
 #' library(dplyr)
 #' df = mtcars %>%
 #'   rownames_to_column(var = "car")
-#'   cmds = c(
+#'
+#' cmds = c(
 #'     "Sort by  mpg",
 #'     "Sort by  column    mpg  ",
 #'     "arrange by column 5",
@@ -28,12 +29,14 @@
 #'     "arrange by columns 2 and 5, mpg decreasing",
 #'     "arrange by columns 4, 5, and 6",
 #'     "sort by mpg descending",
-#'     "sort by mpg ascending",
+#'     "sort by MPG ascending",
 #'     "sort by mpg ascending",
 #'     "sort by mpg low to high")
 #'  results = lapply(cmds, talk_arrange, .data = df)
 #' df = df %>%
 #'   rename(GEAR = gear)
+#'   cmd = "arrange by gear descending"
+#'  data_colnames = df
 #'  gear = df %>%
 #'  talk_arrange("arrange by gear")
 #' testthat::expect_true(!is.unsorted(gear$GEAR))
@@ -57,119 +60,21 @@ talk_arrange = function(.data, cmd, verbose = FALSE, ...) {
 #' @rdname talk_arrange
 #' @param data_colnames column names of the data
 talk_arrange_expr  = function(data_colnames, cmd, ...) {
-  res = talk_get_colnames(data_colnames, cmd, ...)
-  out = lapply(res, function(x) {
-    x$var_out
-  })
-  out = lapply(out, rlang::expr)
-}
 
-#' @export
-#' @rdname talk_arrange
-#'
-#' @param stop_words Words to remove from the command
-#' @param additional_stop_words additional stop words to
-#' remove.  Helpful if you want to pass in these words
-#' instead of with \code{stop_words}
-talk_get_colnames = function(
-  data_colnames, cmd,
-  stop_words = c("sort", "arrange", "order",
-                 "group", "filter",
-                 "mutate", "subset", "select",
-                 "count", "transmute",
-                 "summarize", "summarise",
-                 "missing", "infinite", "finite",
-                 "covariate", "variable",
-                 "nan", "not a number"),
-  additional_stop_words = NULL
-  ) {
   var = variable = NULL
   ordering = var_num = df_var = NULL
   rm(list = c("var", "variable", "ordering", "var_num", "df_var"))
-  # stopifnot(rlang::is_string(cmd))
-  cmd = process_cmd(cmd)
-  cmd = talk_process_arrange_cmd(cmd)
-  cmd = remove_df(cmd)
-  if (!rlang::is_string(cmd)) {
-    warning("Command should be string, results may be wrong")
+
+  ss = talk_get_colnames(data_colnames, cmd, ...)
+  if (is.character(ss)) {
+    ss = list(ss)
   }
-  if (is.data.frame(data_colnames)) {
-    data_colnames = colnames(data_colnames)
-  }
-  cn_df = tibble(
-    var = tolower(data_colnames),
-    df_var = data_colnames
-  )
-  if (any(duplicated(cn_df$var))) {
-    stop("Need to have distinct column names, even with case")
-  }
-  cn = tolower(data_colnames)
-  names(cn) = data_colnames
-
-  # search_words = c("sort", "arrange", "order",
-  #                  "group")
-  # search_str = paste0(search_words, collapse = "|")
-  # stopifnot(grepl(search_str, x = cmd))
-
-
-  # my_stopwords = c("the", "by", "it", "and", "then")
-  my_stopwords = c("the", "by", "it", "and", "then",
-                   "there",
-                   "row",
-                   "up",
-                   "if",
-                   "rows", "want",
-                   "are")
-  my_stopwords = c(my_stopwords, stop_words, additional_stop_words)
-  my_stopwords = unique(my_stopwords)
-  if (any(my_stopwords %in% cn)) {
-    warning(
-      paste0(
-        "stop words given may be column names ",
-        "of the data, results may fail"
-      )
-    )
-  }
-
-  ss = strsplit(cmd, " ")
-  ss = lapply(ss, function(x) {
-    x[ !x %in% my_stopwords]
-  })
-  column_indices = function(cmd, cn) {
-    cmd = trimws(cmd)
-    cmd = replace_ordinals(cmd, max_n = length(cn))
-    ind = grepl("column", cmd)
-    ind = ind | grepl("^\\d*$", cmd)
-    if (any(ind)) {
-      xx = cmd[ind]
-      xx = gsub("column", "", xx)
-      xx = trimws(xx)
-      xx = as.numeric(xx)
-      if (any(xx > length(cn))) {
-        stop("column index > than number of column names")
-      }
-      xx = cn[xx]
-      cmd[ind] = xx
-    }
-    return(cmd)
-  }
-
-  ss = lapply(ss, column_indices, cn = cn)
-  allowed_words = c(cn, "descending", "ascending")
-
-  check = sapply(ss, function(x) {
-    all(x %in% allowed_words)
-  })
-
-  if (!all(check)) {
-    warning("Some words not allowed! Removed")
-    print(ss[!check])
-  }
-
-  # x = ss[[4]]
+  d = talk_check_colnames(data_colnames)
+  data_colnames = d$data_colnames
+  cn_df = d$colname_df
+  cn = d$lower_colnames
 
   res = lapply(ss, function(x) {
-    x = x[x %in% allowed_words]
     d = tibble(
       var = x,
       variable = !var %in% c("descending", "ascending"),
@@ -216,8 +121,13 @@ talk_get_colnames = function(
 
     return(variables)
   })
-  return(res)
+
+  out = lapply(res, function(x) {
+    x$var_out
+  })
+  out = lapply(out, rlang::expr)
 }
+
 
 #' @export
 #' @rdname talk_arrange

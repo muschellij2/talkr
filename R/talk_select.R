@@ -25,10 +25,11 @@
 #' .data = df
 #' cmds = c("subset columns 5 and 6",
 #'         "select column horsepower",
-#'         "drop columns 1 and 3 american")
+#'         "drop columns 1 and 3 american",
+#'         "select MPG column four 5")
 #' cmd = cmds
 #'  data_colnames = colnames(df)
-#'  exprs = lapply(cmds, talk_select_expr, data_colnames = df)
+#'  exprs = sapply(cmds, talk_select_expr, data_colnames = df)
 #'  exprs = sapply(exprs, function(x) x$condition)
 #'  results = lapply(cmds, talk_select, .data = df)
 #'  cyl = df %>%
@@ -74,15 +75,10 @@ talk_select_expr = function(data_colnames, cmd, ...) {
   if (is.data.frame(data_colnames)) {
     data_colnames = colnames(data_colnames)
   }
-  cn_df = tibble(
-    var = tolower(data_colnames),
-    df_var = data_colnames
-  )
-  if (any(duplicated(cn_df$var))) {
-    stop("Need to have distinct column names, even with case")
-  }
-  cn = tolower(data_colnames)
-  names(cn) = data_colnames
+  d = talk_check_colnames(data_colnames)
+  data_colnames = d$data_colnames
+  cn = d$lower_colnames
+  cn_df = d$colname_df
 
   cmd = process_cmd(cmd, drop_punct = FALSE)
   cmd = fix_contractions(cmd)
@@ -131,25 +127,33 @@ talk_select_expr = function(data_colnames, cmd, ...) {
   })
   split_condition$condition = ss
 
-  variables = talk_get_colnames(
-    data_colnames = data_colnames,
-    cmd = split_condition$condition)
-
   split_condition$n = 1:nrow(split_condition)
   split_condition = split(split_condition, split_condition$n)
-  variables = mapply(function(v, s) {
+  variables = lapply(split_condition, function(s) {
+    res = talk_cmd_to_colnames(
+      data_colnames = data_colnames,
+      cmd = s$condition)
+    variables = talk_get_colnames(
+      data_colnames = data_colnames,
+      cmd = s$condition,
+      ...
+    )
+    v = tibble(df_var = variables)
+
     v$is_not = s$is_not
     v = v %>%
       ungroup() %>%
-      arrange(var_num) %>%
       mutate(condition = ifelse(
         is_not,
         paste0("-", df_var),
         df_var
       ))
     v$command_clean = s$command_clean
+    v$full_command = paste0(s$command_clean,
+                        "(", paste(v$condition, collapse = ", "),
+                        ")")
     v
-  }, variables, split_condition, SIMPLIFY = FALSE)
+  } )
 
 
   return(variables)

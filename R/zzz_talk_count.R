@@ -16,19 +16,22 @@
 #'   rownames_to_column(var = "car")
 #'   cmds = c(
 #'     "count by  mpg",
-#'     "count up mpg, hp")
+#'     "count up mpg, hp",
+#'     "count up mpg, hp, mpg")
 #'  data_colnames = df
 #'  .data = df
 #'  results = lapply(cmds, talk_count, .data = df)
 #' df = df %>%
 #'   rename(GEAR = gear)
+#' data_colnames = df
+#' cmd = "count by gear "
 #'  gear = df %>%
-#'  talk_count("arrange by gear ")
+#'  talk_count("count by gear ")
 #' testthat::expect_true(all(colnames(gear) == c("GEAR", "n")))
 talk_count = function(.data, cmd, verbose = FALSE, ...) {
 
   data_colnames = colnames(.data)
-  out = talk_group_by_expr(data_colnames, cmd, ...)
+  out = talk_count_expr(data_colnames, cmd, ...)
 
   out = lapply(out, function(x) {
     count(x = .data, !!! x)
@@ -43,6 +46,13 @@ talk_count = function(.data, cmd, verbose = FALSE, ...) {
 #' @export
 #' @rdname talk_count
 #' @param data_colnames column names of the data
-talk_count_expr = talk_group_by_expr
-
+#' @param allowed_words words allowed to be in the command other than
+#' the column names
+talk_count_expr = function(data_colnames, cmd,
+                           allowed_words = "",
+                           ...) {
+  talk_group_by_expr(data_colnames, cmd,
+                     allowed_words = allowed_words,
+                     ...)
+}
 

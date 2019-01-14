@@ -3,19 +3,12 @@
 \name{talk_arrange}
 \alias{talk_arrange}
 \alias{talk_arrange_expr}
-\alias{talk_get_colnames}
 \alias{talk_process_arrange_cmd}
 \title{Talk to Arrange a Data set}
 \usage{
 talk_arrange(.data, cmd, verbose = FALSE, ...)
 
 talk_arrange_expr(data_colnames, cmd, ...)
-
-talk_get_colnames(data_colnames, cmd, stop_words = c("sort", "arrange",
-  "order", "group", "filter", "mutate", "subset", "select", "count",
-  "transmute", "summarize", "summarise", "missing", "infinite", "finite",
-  "covariate", "variable", "nan", "not a number"),
-  additional_stop_words = NULL)
 
 talk_process_arrange_cmd(cmd)
 }
@@ -30,12 +23,6 @@ perform the operation.}
 \item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}}
 
 \item{data_colnames}{column names of the data}
-
-\item{stop_words}{Words to remove from the command}
-
-\item{additional_stop_words}{additional stop words to
-remove.  Helpful if you want to pass in these words
-instead of with \code{stop_words}}
 }
 \value{
 A \code{data.frame} or list of them if \code{length(cmds) > 1}.
@@ -48,7 +35,8 @@ library(tibble)
 library(dplyr)
 df = mtcars \%>\%
   rownames_to_column(var = "car")
-  cmds = c(
+
+cmds = c(
     "Sort by  mpg",
     "Sort by  column    mpg  ",
     "arrange by column 5",
@@ -59,12 +47,14 @@ df = mtcars \%>\%
     "arrange by columns 2 and 5, mpg decreasing",
     "arrange by columns 4, 5, and 6",
     "sort by mpg descending",
-    "sort by mpg ascending",
+    "sort by MPG ascending",
     "sort by mpg ascending",
     "sort by mpg low to high")
  results = lapply(cmds, talk_arrange, .data = df)
 df = df \%>\%
   rename(GEAR = gear)
+  cmd = "arrange by gear descending"
+ data_colnames = df
  gear = df \%>\%
  talk_arrange("arrange by gear")
 testthat::expect_true(!is.unsorted(gear$GEAR))

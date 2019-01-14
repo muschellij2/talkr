@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-#' cmds = c("Sort df by  mpg", "arrange the data by mpg")
+#' cmds = c("Sort df by  mpg", "arrange the data by mpg", "group_by mpg")
 #' sapply(cmds, talk_dplyr_function)
 talk_dplyr_function = function(cmd) {
   stopifnot(rlang::is_string(cmd))
@@ -28,7 +28,7 @@ talk_dplyr_function = function(cmd) {
   if (first_word %in% c("select", "arrange", "filter",
                         "mutate", "group_by", "summarize",
                         "count", "tally",
-                        "rename")) {
+                        "rename", "qplot")) {
     dplyr_func = first_word
   }
   # if (grepl(" all ", cmd)) {

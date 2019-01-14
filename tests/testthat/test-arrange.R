@@ -17,7 +17,9 @@ testthat::test_that("Testing commands from examples", {
     "sort by mpg ascending",
     "sort by mpg ascending",
     "sort by mpg low to high")
-  res = lapply(cmds, talk_arrange, .data = df)
+  testthat::expect_warning({
+    res = lapply(cmds, talk_arrange, .data = df)
+  })
   testthat::expect_is(res, "list")
   testthat::expect_is(res[[1]], "data.frame")
 
@@ -25,11 +27,11 @@ testthat::test_that("Testing commands from examples", {
   testthat::expect_warning({
     df %>%
       talk_arrange("arrange by columns 2 and 5, mpg decreasing")
-  }, regexp = "ultiple order")
+  }, regexp = "uplicate")
 
   testthat::expect_silent({
     df %>%
-      talk_arrange("arrange by columns 2 and 5, mpg")
+      talk_arrange("arrange by columns 2 and 5")
   })
 
 })

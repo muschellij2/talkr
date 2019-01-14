@@ -20,20 +20,20 @@
 #'     "group by column 5",
 #'     "arrange by gear",
 #'     "group by columns 4 and 5",
-#'     "group by columns 4 and 5, mpg decreasing",
+#'     "group by columns 4 and 5, mpg",
 #'     # duplciate
-#'     "group by columns 2 and 5, mpg decreasing",
+#'     "group by columns 2 and 5, mpg",
 #'     "group by columns 4, 5, and 6",
 #'     "group by mpg descending",
-#'     "group by mpg ascending",
-#'     "group by mpg ascending",
+#'     "group by mpg",
+#'     "group by mpg",
 #'     "group by mpg low to high")
 #'  data_colnames = df
 #'  .data = df
 #'  results = lapply(cmds, talk_group_by, .data = df)
 #'  cmd =  "group by columns 2 and 5, mpg decreasing"
 #'  testthat::expect_warning(talk_group_by(.data, cmd),
-#'  "orderings")
+#'  "allowed")
 #' df = df %>%
 #'   rename(GEAR = gear)
 #'  gear = df %>%
@@ -58,11 +58,20 @@ talk_group_by = function(.data, cmd, verbose = FALSE, ...) {
 #' @export
 #' @rdname talk_group_by
 #' @param data_colnames column names of the data
-talk_group_by_expr  = function(data_colnames, cmd, ...) {
-  res = talk_get_colnames(data_colnames, cmd, ...)
-  out = lapply(res, function(x) {
-    x$df_var
-  })
+#' @param allowed_words words allowed to be in the command other than
+#' the column names
+talk_group_by_expr  = function(data_colnames, cmd,
+                               allowed_words = "",
+                               ...) {
+  out = talk_get_colnames(
+    data_colnames, cmd,
+    allowed_words = allowed_words, ...)
+  if (is.character(out)) {
+    out = list(out)
+  }
+  # out = lapply(out, function(x) {
+  #   x$df_var
+  # })
   out = lapply(out, friendlyeval::treat_strings_as_exprs)
 }
 

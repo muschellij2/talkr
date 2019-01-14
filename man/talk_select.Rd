@@ -42,10 +42,11 @@ carburetor = carb)
 .data = df
 cmds = c("subset columns 5 and 6",
         "select column horsepower",
-        "drop columns 1 and 3 american")
+        "drop columns 1 and 3 american",
+        "select MPG column four 5")
 cmd = cmds
  data_colnames = colnames(df)
- exprs = lapply(cmds, talk_select_expr, data_colnames = df)
+ exprs = sapply(cmds, talk_select_expr, data_colnames = df)
  exprs = sapply(exprs, function(x) x$condition)
  results = lapply(cmds, talk_select, .data = df)
  cyl = df \%>\%

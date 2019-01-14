@@ -50,7 +50,11 @@ talk_expr = function(.data, cmd, error_find_function = TRUE, ...) {
   }
   talk_func = paste0("talk_", func, "_expr")
   res = do.call(talk_func, args = list(data_colnames = .data, cmd = cmd, ...))
-  if (func %in% "filter") {
+  if (length(res) == 1 &
+      is.list(res)) {
+    res = res[[1]]
+  }
+  if (func %in% c("filter", "select")) {
     res = res$condition
   }
   L = list(expression = res,

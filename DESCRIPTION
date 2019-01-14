@@ -1,7 +1,7 @@
 Type: Package
 Package: talkr
-Title: Talk Through Data Analysis
-Version: 0.1.0
+Title: Talk through Data Analysis
+Version: 0.2.0
 Authors@R: 
     person(given = "John",
            family = "Muschelli",
@@ -12,13 +12,15 @@ Description: Use natural language commands to talk through data
     analysis using 'dplyr'.  Currently, natural language processing is not
     used but a simple grammar.
 License: GPL-3
+Depends: R (>= 2.10)
 Imports: 
     dplyr,
     rlang,
     tibble,
     shiny,
     english,
-    friendlyeval
+    friendlyeval,
+    ggplot2
 Suggests: 
     covr,
     knitr,

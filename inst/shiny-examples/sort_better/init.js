@@ -31,7 +31,8 @@ if (annyang) {
       inputFunc('', 'reset');
   };
   undo = function() {
-      inputFunc('', 'undo');
+    var retstring = "undo ".concat(Math.random());
+    inputFunc('', retstring);
   };
 
 
@@ -82,6 +83,7 @@ if (annyang) {
 
     'filter *command': filter,
     'select *command': select,
+    'undo again': undo,
     'undo': undo,
     'reset': reset
   } ;
