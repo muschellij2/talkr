@@ -57,9 +57,9 @@ talk_ggplot_words = function() {
 #'     "ggplot by  column    mpg  ",
 #'     "ggplot by column 5",
 #'     "ggplot a histogram of mpg, coloured by gear",
-#'     "ggplot by columns 4 and 5",
+#'     "ggplot columns 4 and 5",
 #'     # duplciate
-#'     "ggplot by mpg descending coloured by American")
+#'     "ggplot by mpg coloured by American")
 #'  data_colnames = df
 #'  .data = df
 #'  allowed_words = talkr:::talk_ggplot_words()
@@ -200,6 +200,9 @@ talk_ggplot_expr  = function(data_colnames, cmd,
       mutate(
         var = trimws(var),
         df_var = gsub("^geom([^_])", "geom_\\1", var),
+        df_var = ifelse(!grepl("^geom", df_var),
+                        paste0("geom_", df_var),
+                        df_var)
       )
     p_type = p_type %>%
       mutate(

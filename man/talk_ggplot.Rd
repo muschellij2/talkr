@@ -42,9 +42,9 @@ df = mtcars \%>\%
     "ggplot by  column    mpg  ",
     "ggplot by column 5",
     "ggplot a histogram of mpg, coloured by gear",
-    "ggplot by columns 4 and 5",
+    "ggplot columns 4 and 5",
     # duplciate
-    "ggplot by mpg descending coloured by American")
+    "ggplot by mpg coloured by American")
  data_colnames = df
  .data = df
  allowed_words = talkr:::talk_ggplot_words()
