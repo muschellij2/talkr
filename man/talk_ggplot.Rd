@@ -24,6 +24,9 @@ perform the operation.}
 \item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}}
 
 \item{data_colnames}{column names of the data}
+
+\item{allowed_words}{words allowed to be in the command other than
+the column names}
 }
 \value{
 A \code{data.frame} or list of them if \code{length(cmds) > 1}.

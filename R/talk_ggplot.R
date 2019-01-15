@@ -102,12 +102,14 @@ talk_ggplot = function(.data, cmd, verbose = FALSE, ...) {
 #' @export
 #' @rdname talk_ggplot
 #' @param data_colnames column names of the data
+#' @param allowed_words words allowed to be in the command other than
+#' the column names
 talk_ggplot_expr  = function(data_colnames, cmd,
                              allowed_words = talk_ggplot_words(),
                              ...) {
 
-  is_not = NULL
-  rm(list = "is_not")
+  var_out = aesthetic = plot_type = is_not = NULL
+  rm(list = c("is_not", "var_out", "aesthetic", "plot_type"))
   if (is.data.frame(data_colnames)) {
     data_colnames = colnames(data_colnames)
   }
