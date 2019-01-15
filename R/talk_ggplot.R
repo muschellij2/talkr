@@ -29,7 +29,7 @@ talk_aes = function() {
 }
 
 talk_ggplot_words = function() {
-  c(talk_geoms(), talk_aes())
+  c(talk_geoms(), talk_aes(), "ggplot", "plot")
 }
 
 
@@ -55,26 +55,27 @@ talk_ggplot_words = function() {
 #'   cmds = c(
 #'     "ggplot by  mpg",
 #'     "ggplot by  column    mpg  ",
-#'     "ggplot by column 5",
+#'     "ggplot by column 5 and column 4",
 #'     "ggplot a histogram of mpg, coloured by gear",
 #'     "ggplot columns 4 and 5",
 #'     # duplciate
-#'     "ggplot by mpg coloured by American")
+#'     "ggplot by mpg coloured by gear")
 #'  data_colnames = df
 #'  .data = df
 #'  allowed_words = talkr:::talk_ggplot_words()
-#'  cmd = c("ggplot a histogram of mpg, coloured by gear",
+#'  cmd = c(
+#'  "ggplot by mpg coloured by gear",
+#'  "ggplot a histogram of mpg, coloured by gear",
 #'  "ggplot a histogram of mpg, facetted by gear")
 #'  results = lapply(cmds, talk_ggplot_expr, data_colnames = df)
-#'  results = lapply(cmd, talk_ggplot, .data = df)
-#'  cmd =  "ggplot by columns 2 and 5, mpg decreasing"
-#'  testthat::expect_warning(talk_ggplot(.data, cmd),
-#'  "orderings")
+#'  results = lapply(cmds, talk_ggplot, .data = df)
+#'  cmd =  "ggplot by columns 2 and 5"
+#'  testthat::expect_silent(talk_ggplot(.data, cmd))
 #' df = df %>%
 #'   rename(GEAR = gear)
 #'  gear = df %>%
-#'  talk_ggplot("arrange by gear and column 3")
-#' testthat::expect_true(all(ggplot_vars(gear) == c("GEAR", "cyl")))
+#'  talk_ggplot("ggplot by gear and column 3")
+#' print(gear)
 talk_ggplot = function(.data, cmd, verbose = FALSE, ...) {
 
   data_colnames = colnames(.data)
@@ -149,8 +150,9 @@ talk_ggplot_expr  = function(data_colnames, cmd,
       aes = var %in% talk_aes(),
       plot_type = var %in% talk_geoms(),
       variable = !aes & !plot_type,
-      var_num = cumsum(rev(variable))
+      var_num = rev(cumsum(rev(variable)))
     )
+    d$var_num = max(d$var_num) - d$var_num + 1
     variables = d[ d$variable & !d$aes, ]
     orders = d[ !d$variable & d$aes, ]
 
@@ -210,7 +212,7 @@ talk_ggplot_expr  = function(data_colnames, cmd,
         aes = FALSE,
         plot_type = TRUE,
         aesthetic = "geom",
-        var_num = NA,
+        var_num = NA_character_,
         var_out = paste0(df_var, "()")
       ) %>%
       select(-var_num)
@@ -271,6 +273,8 @@ talk_ggplot_expr  = function(data_colnames, cmd,
 talk_process_ggplot_cmd = function(cmd) {
   # make ascending
   cmd = talk_process_arrange_cmd(cmd)
+
+  cmd = sub("^(ggplot|plot) ", "", cmd)
 
   cmd = gsub("x variable(s|)", "x=", cmd)
   cmd = gsub("x is ", "x=", cmd)
@@ -335,6 +339,32 @@ talk_process_ggplot_cmd = function(cmd) {
   cmd = gsub("errorbar h ", "errorbarh ", cmd)
   cmd = gsub(" errorbar", " geomerrorbar", cmd)
   cmd = gsub(" (line|point) range", " geom\\1range", cmd)
+
+
+  my_stopwords = c("the", "by", "it", "and",
+                   "with", "values", "a", "an",
+                   "is", "of",
+                   "in",
+                   "up",
+                   "there",
+                   "are",
+                   "out",
+                   "filter",
+                   "subset",
+                   "so", "that",
+                   "value",
+                   "row",
+                   "have",
+                   "where",
+                   "only",
+                   "rows", "want")
+  ss = strsplit(cmd, " ")
+  ss = lapply(cmd, function(x) {
+    paste(x[ !x %in% my_stopwords], collapse = " ")
+  })
+  if (length(ss) == 1) {
+    cmd = ss[[1]]
+  }
 
   return(cmd)
 }

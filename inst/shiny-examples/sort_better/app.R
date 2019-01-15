@@ -40,6 +40,9 @@ shinyApp(
         textOutput('group_vars')
       ),
       h3(
+        plotOutput('plot')
+      ),
+      h3(
         "Command history:",
         tableOutput('cmd_history')
       ),
@@ -100,6 +103,8 @@ shinyApp(
           }
           print(paste("length L is ", length(L)))
           # print(head(L[[1]]))
+        } else if (grepl("^(gg|)plot", cmd)) {
+
         } else {
           run_df <<- L[[1]]
           print(cmd)
@@ -145,6 +150,23 @@ shinyApp(
     output$df = renderDataTable({
       print(input$command)
       resulting_df()
+    })
+
+    output$plot = renderPlot({
+      cmd = get_cmd()
+      res = NULL
+      if (grepl("^(gg|)plot", cmd)) {
+        res = try( {
+          run_df %>%
+            talk(cmd, error_find_function = FALSE)
+        })
+        print("res is")
+        print(class(res))
+        if (inherits(res, "try-error")) {
+          res = NULL
+        }
+      }
+      print(res)
     })
     output$group_vars = renderText({
       run_df = resulting_df()
