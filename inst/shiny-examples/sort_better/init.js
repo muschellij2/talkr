@@ -27,6 +27,9 @@ if (annyang) {
   count = function(command) {
       inputFunc(command, 'count');
   };
+  plot = function(command) {
+      inputFunc(command, 'ggplot');
+  };
   reset = function() {
       inputFunc('', 'reset');
   };
@@ -73,6 +76,10 @@ if (annyang) {
     'drop columns *command': not_select,
     'remove column *command': not_select,
     'remove columns *command': not_select,
+
+    'g g plot *command': plot,
+    'ggplot *command': plot,
+    'plot *command': plot,
 
     'subset rose *command': filter,
     'select rose *command': filter,

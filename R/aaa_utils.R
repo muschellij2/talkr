@@ -26,12 +26,19 @@ process_cmd = function(
   # take out
   cmd = trim_multi_space(cmd)
 
+  cmd = gsub("density_2d", "density2d", cmd)
+  cmd = gsub("qq_line", "qqline", cmd)
+
   cmd = gsub("group_by", "groupby", cmd)
+  cmd = gsub("facet_(wrap|grid)", "facet\\1", cmd)
   # remove punctutation
   string = paste0("[", ifelse(drop_punct, "[:punct:]", ""),
                   "[:blank:]]+")
   cmd = gsub(string, " ", cmd)
   cmd = gsub("groupby", "group_by", cmd)
+  cmd = gsub("density2d", "density_2d", cmd)
+  cmd = gsub("qqline", "qq_line", cmd)
+  cmd = gsub("facet(wrap|grid)", "facet_\\1", cmd)
 
   cmd = trim_multi_space(cmd)
   return(cmd)
@@ -46,8 +53,8 @@ no_ops = function() {
   setdiff(punct(), c("!", "=", ">", "<", "|", "&"))
 }
 
-remove_punct_keep_ops = function(cmd) {
-  for (i in no_ops()) {
+remove_punct_keep_ops = function(cmd, punct = no_ops()) {
+  for (i in punct) {
     cmd = gsub(i, " ", cmd, fixed = TRUE)
   }
   cmd = trim_multi_space(cmd)

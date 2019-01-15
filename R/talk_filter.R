@@ -138,7 +138,7 @@ talk_filter_expr = function(data_colnames, cmd, ...) {
 
 
   my_stopwords = c("the", "by", "it", "and",
-                   "with", "values", "a",
+                   "with", "values", "a", "an",
                    "is", "of",
                    "in",
                    "up",

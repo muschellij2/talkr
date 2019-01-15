@@ -69,19 +69,19 @@ shinyApp(
       cmd = gsub(" for ", " four ", cmd)
       cmd = gsub(" for$", " four", cmd)
       print(cmd)
-      if (cmd != "") {
-        cmd_history <<- c(cmd, cmd_history)
-      }
-      if (grepl("^undo", cmd)) {
-        cmd = "undo"
-        cmd_history <<- cmd_history[-1]
-        if (length(cmd_history) == 0) {
-          cmd_history <<- ""
-        }
-      }
-      if (grepl("^reset", cmd)) {
-        cmd_history <<- ""
-      }
+      # if (cmd != "") {
+      #   cmd_history <<- c(cmd, cmd_history)
+      # }
+      # if (grepl("^undo", cmd)) {
+      #   cmd = "undo"
+      #   cmd_history <<- cmd_history[-1]
+      #   if (length(cmd_history) == 0) {
+      #     cmd_history <<- ""
+      #   }
+      # }
+      # if (grepl("^reset", cmd)) {
+      #   cmd_history <<- ""
+      # }
       cmd
     })
 
@@ -107,11 +107,14 @@ shinyApp(
             talk_expr(cmd, error_find_function = FALSE)
           res$expression = paste(res$expression, collapse = ", ")
           run_expr = paste0(res$func, "(", res$expression, ")")
-          run_df <<- run_df %>%
+          res = try( {run_df <<- run_df %>%
             talk(cmd, error_find_function = FALSE)
-          L = c(list(run_df), L)
-          names(L)[1] = run_expr
-          L <<- L
+          })
+          if (!inherits(res, "try-error")) {
+            L = c(list(run_df), L)
+            names(L)[1] = run_expr
+            L <<- L
+          }
           print(paste("length L is ", length(L)))
           print(names(L))
         }
@@ -160,7 +163,7 @@ shinyApp(
       if (grepl("^undo", cmd)) {
         cmd = "undo"
       }
-      paste0("Your command is: ", get_cmd())
+      paste0("Your command is: ", cmd)
     })
     output$cmd_clean = renderText({
       cmd = get_cmd()

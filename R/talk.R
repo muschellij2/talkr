@@ -56,6 +56,15 @@ talk_expr = function(.data, cmd, error_find_function = TRUE, ...) {
   if (func %in% c("filter", "select")) {
     res = res$condition
   }
+  if (func %in% c("ggplot")) {
+    nx = names(res$variables)
+    nx = paste0(nx, " = ", as.character(res$variables))
+    nx = paste(nx, collapse = ", ")
+    nx = paste0("ggplot(aes_(", nx, "))")
+    pt = paste0(res$plot_types, collapse = " + ")
+    nx = paste0(nx, " + ", pt)
+    res = nx
+  }
   L = list(expression = res,
            func = func)
   return(L)
