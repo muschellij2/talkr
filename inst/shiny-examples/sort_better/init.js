@@ -27,6 +27,9 @@ if (annyang) {
   count = function(command) {
       inputFunc(command, 'count');
   };
+  replace = function(command) {
+      inputFunc(command, 'replace');
+  };
   plot = function(command) {
       inputFunc(command, 'ggplot');
   };
@@ -63,6 +66,11 @@ if (annyang) {
     'drop rows *command': not_filter,
     'remove row *command': not_filter,
     'remove rows *command': not_filter,
+
+    'replace *command': replace,
+    'make *command': replace,
+    'coerce *command': replace,
+    'change *command': replace,
 
     'subset column *command': select,
     'subset columns *command': select,

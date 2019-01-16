@@ -51,6 +51,10 @@ shinyApp(
         "Command history:",
         tableOutput('cmd_history')
       ),
+      h3(
+        "Classes of your columns:",
+        tableOutput('class_table')
+      ),
       helpText(
         'You are recommended to use Google Chrome to play with this app.',
         'To change the title, say something that starts with "sort" or arrange, e.g.',
@@ -151,6 +155,15 @@ shinyApp(
       print(tab)
       tab
     })
+
+    output$class_table = renderTable({
+      cmd = input$command
+
+      cn_df = talk_colnames_class(L[[1]])
+      cn_df
+    })
+
+
 
 
 
