@@ -7,7 +7,12 @@ run_df = tibble::rownames_to_column(mtcars, var = "car")
 run_df = run_df %>%
   rename(cylinders = cyl,
          horsepower = hp,
-         American = am,
+         transmission = am,
+         Displacement = disp,
+         axle_ratio = drat,
+         qmile = qsec,
+         Engine = vs,
+         weight = wt,
          carburetor = carb)
 xdf = run_df
 L = list(xdf)
@@ -71,6 +76,8 @@ shinyApp(
       }
       cmd = gsub(" for ", " four ", cmd)
       cmd = gsub(" for$", " four", cmd)
+      cmd = gsub(" underscore ", "_", cmd)
+      cmd = gsub("fassett", "facet", cmd)
       print(cmd)
       # if (cmd != "") {
       #   cmd_history <<- c(cmd, cmd_history)

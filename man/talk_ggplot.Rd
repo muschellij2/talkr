@@ -43,6 +43,7 @@ df = mtcars \%>\%
   cmds = c(
     "ggplot by  mpg",
     "ggplot by  column    mpg  ",
+    "plot mpg filled with gear",
     "ggplot by column 5 and column 4",
     "ggplot a histogram of mpg, coloured by gear",
     "ggplot columns 4 and 5",

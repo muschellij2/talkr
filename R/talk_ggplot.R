@@ -55,6 +55,7 @@ talk_ggplot_words = function() {
 #'   cmds = c(
 #'     "ggplot by  mpg",
 #'     "ggplot by  column    mpg  ",
+#'     "plot mpg filled with gear",
 #'     "ggplot by column 5 and column 4",
 #'     "ggplot a histogram of mpg, coloured by gear",
 #'     "ggplot columns 4 and 5",
@@ -78,6 +79,7 @@ talk_ggplot_words = function() {
 #' print(gear)
 talk_ggplot = function(.data, cmd, verbose = FALSE, ...) {
 
+  class_df = talk_colnames_class(.data)
   data_colnames = colnames(.data)
   out = talk_ggplot_expr(data_colnames, cmd, ...)
   small_list = out[[1]]
