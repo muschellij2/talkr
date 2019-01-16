@@ -71,6 +71,7 @@ talk_ggplot_words = function() {
 #'  results = lapply(cmds, talk_ggplot_expr, data_colnames = df)
 #'  results = lapply(cmds, talk_ggplot, .data = df)
 #'  cmd =  "ggplot by columns 2 and 5"
+#'  cmd = "ggplot MPG faceted by gear"
 #'  testthat::expect_silent(talk_ggplot(.data, cmd))
 #' df = df %>%
 #'   rename(GEAR = gear)
@@ -311,6 +312,7 @@ talk_process_ggplot_cmd = function(cmd) {
   cmd = gsub("filled", "fill=", cmd)
   cmd = gsub("facets ", "facet ", cmd)
   cmd = gsub("facetted ", "facet ", cmd)
+  cmd = gsub("faceted ", "facet ", cmd)
   cmd = gsub("facet wrap", "facet_wrap", cmd)
   cmd = gsub("facet grid", "facet_grid", cmd)
   cmd = gsub("facet ", "facet_wrap ", cmd)

@@ -59,6 +59,7 @@ df = mtcars \%>\%
  results = lapply(cmds, talk_ggplot_expr, data_colnames = df)
  results = lapply(cmds, talk_ggplot, .data = df)
  cmd =  "ggplot by columns 2 and 5"
+ cmd = "ggplot MPG faceted by gear"
  testthat::expect_silent(talk_ggplot(.data, cmd))
 df = df \%>\%
   rename(GEAR = gear)
