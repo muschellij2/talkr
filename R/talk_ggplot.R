@@ -333,6 +333,13 @@ talk_process_ggplot_cmd = function(cmd) {
   cmd = gsub(" h line", "hline", cmd)
   cmd = gsub(" v line", "vline", cmd)
 
+  for (iplot in c("box", "bar", "dot")) {
+    pp = paste0(iplot, " plot")
+    outp = paste0(iplot, "plot")
+    cmd = gsub(pp, outp, cmd)
+  }
+  cmd = gsub("cross bar", "crossbar", cmd)
+
   cmd = gsub("line plot", "geomline", cmd)
   cmd = gsub("scatter plot", "geompoint", cmd)
   cmd = gsub("scatterplot", "geompoint", cmd)
