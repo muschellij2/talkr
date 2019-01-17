@@ -44,7 +44,6 @@
 #'         "filter where cylinders are not missing",
 #'         "filter if cylinders isn't missing",
 #'         "filter so gear equal 6")
-#'  cmd = "filter where cylinders are not missing"
 #'  data_colnames = colnames(df)
 #'  exprs = lapply(cmds, talk_filter_expr, data_colnames = df)
 #'  exprs = sapply(exprs, function(x) x$condition)
@@ -52,6 +51,14 @@
 #'  cyl = df %>%
 #'  talk_filter("filter if cylinders is equal to 6")
 #' testthat::expect_true(all(cyl$cylinders == 6))
+#'  results = lapply(cmds, talk_filter, .data = df)
+#' cmd = "filter where cylinders are not missing and gear greater than 6"
+#' res = talk_filter_expr(cmd, data_colnames = df)
+#' testthat::expect_true(res$condition == "!is.na(cylinders) & gear > 6")
+#'
+#' cmd = "filter where cylinders equal to 4 or gear equals 6"
+#' res = talk_filter_expr(cmd, data_colnames = df)
+#' testthat::expect_true(res$condition == "cylinders == 4 | gear == 6")
 #' talk_colnames_class(cyl)
 talk_filter = function(.data, cmd,
                        verbose = FALSE,
@@ -59,7 +66,7 @@ talk_filter = function(.data, cmd,
   if (verbose) {
     message("call to talk_filter")
   }
-  # stopifnot(rlang::is_string(cmd))
+  stopifnot(rlang::is_string(cmd))
   data_colnames = colnames(.data)
   out = talk_filter_expr(data_colnames, cmd, ...)
 
@@ -85,10 +92,11 @@ talk_filter = function(.data, cmd,
 #' @export
 #' @rdname talk_filter
 #' @param data_colnames column names of the data
+#' @importFrom utils head
 talk_filter_expr = function(data_colnames, cmd, ...) {
 
-  is_not = NULL
-  rm(list = "is_not")
+  cmd_id = is_not = NULL
+  rm(list = c("is_not", "cmd_id"))
   if (is.data.frame(data_colnames)) {
     data_colnames = colnames(data_colnames)
   }
@@ -116,16 +124,30 @@ talk_filter_expr = function(data_colnames, cmd, ...) {
 
   split_condition = strsplit(cmd, split = "condition")
   split_condition = lapply(split_condition, trimws)
-  split_condition = t(sapply(split_condition, function(x) {
+  split_condition = lapply(split_condition, function(x) {
     x = x[ !x %in% ""]
-    x = c(x[1], paste(x[2:length(x)], collapse = " "))
+    xx = paste(x, collapse = " ")
     res = is_condition_not(x[1], clean_cmd = "filter")
-    c(x, res$not_condition, res$clean_cmd, res$cmd)
-  }))
-  colnames(split_condition) = c("command", "condition",
-                                "is_not",
-                                "command_clean",
-                                "attempt_clean")
+    x = x[-1]
+    df = tibble(
+      command = xx,
+      is_not = res$not_condition,
+      command_clean = res$clean_cmd,
+      attempt_clean = res$cmd,
+      condition = x
+    )
+  })
+  split_condition = bind_rows(split_condition, .id = "cmd_id")
+  # split_condition = t(sapply(split_condition, function(x) {
+  #   x = x[ !x %in% ""]
+  #   x = c(x[1], paste(x[2:length(x)], collapse = " "))
+  #   res = is_condition_not(x[1], clean_cmd = "filter")
+  #   c(x, res$not_condition, res$clean_cmd, res$cmd)
+  # }))
+  # colnames(split_condition) = c("command", "condition",
+  #                               "is_not",
+  #                               "command_clean",
+  #                               "attempt_clean")
   split_condition = tibble::as_tibble(split_condition)
   split_condition$is_not = as.logical(split_condition$is_not )
 
@@ -200,8 +222,18 @@ talk_filter_expr = function(data_colnames, cmd, ...) {
     mutate(
       condition = gsub(paste0("(.*)(!| )", test_string), "\\2\\3(\\1)",
                        condition),
-      condition = trimws(condition),
-      condition = paste0(ifelse(is_not, "!(", ""),
+      # OCD with spaces
+      condition = sub(" )$", ")", condition),
+      condition = trimws(condition))
+  # before and and or - this did not exist
+  split_condition = split_condition %>%
+    group_by(cmd_id) %>%
+    mutate(condition = paste(condition, collapse = " ")) %>%
+    head(1) %>%
+    ungroup
+
+  split_condition = split_condition %>%
+    mutate( condition = paste0(ifelse(is_not, "!(", ""),
                          condition,
                          ifelse(is_not, ")", ""))
     )
@@ -321,6 +353,8 @@ talk_process_filter_cmd = function(cmd) {
   cmd = gsub("column (\\d+)", "column\\1", cmd)
   cmd = gsub("column(\\D|$)", "", cmd)
 
+  cmd = gsub(" and ", " condition & ", cmd)
+  cmd = gsub(" or ", " condition | ", cmd)
 
   return(cmd)
 }

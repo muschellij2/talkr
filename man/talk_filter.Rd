@@ -54,7 +54,6 @@ cmds = c("subset rows, by horsepower > 100",
         "filter where cylinders are not missing",
         "filter if cylinders isn't missing",
         "filter so gear equal 6")
- cmd = "filter where cylinders are not missing"
  data_colnames = colnames(df)
  exprs = lapply(cmds, talk_filter_expr, data_colnames = df)
  exprs = sapply(exprs, function(x) x$condition)
@@ -62,5 +61,13 @@ cmds = c("subset rows, by horsepower > 100",
  cyl = df \%>\%
  talk_filter("filter if cylinders is equal to 6")
 testthat::expect_true(all(cyl$cylinders == 6))
+ results = lapply(cmds, talk_filter, .data = df)
+cmd = "filter where cylinders are not missing and gear greater than 6"
+res = talk_filter_expr(cmd, data_colnames = df)
+testthat::expect_true(res$condition == "!is.na(cylinders) & gear > 6")
+
+cmd = "filter where cylinders equal to 4 or gear equals 6"
+res = talk_filter_expr(cmd, data_colnames = df)
+testthat::expect_true(res$condition == "cylinders == 4 | gear == 6")
 talk_colnames_class(cyl)
 }
