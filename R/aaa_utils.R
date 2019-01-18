@@ -26,16 +26,24 @@ process_cmd = function(
   # take out
   cmd = trim_multi_space(cmd)
 
+  cmd = gsub("^group by ", "group_by ", cmd)
+  cmd = gsub("^facet (wrap|grid) ", "facet_\\1 ", cmd)
+  cmd = gsub("^add (count|tally)", "add_\\1", cmd)
+
   cmd = gsub("density_2d", "density2d", cmd)
   cmd = gsub("qq_line", "qqline", cmd)
 
   cmd = gsub("group_by", "groupby", cmd)
+  cmd = gsub("add_count", "addcount", cmd)
+  cmd = gsub( "add_tally", "addtally", cmd)
   cmd = gsub("facet_(wrap|grid)", "facet\\1", cmd)
   # remove punctutation
   string = paste0("[", ifelse(drop_punct, "[:punct:]", ""),
                   "[:blank:]]+")
   cmd = gsub(string, " ", cmd)
   cmd = gsub("groupby", "group_by", cmd)
+  cmd = gsub( "addcount", "add_count", cmd)
+  cmd = gsub( "addtally", "add_tally", cmd)
   cmd = gsub("density2d", "density_2d", cmd)
   cmd = gsub("qqline", "qq_line", cmd)
   cmd = gsub("facet(wrap|grid)", "facet_\\1", cmd)

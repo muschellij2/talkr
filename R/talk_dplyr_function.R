@@ -27,6 +27,7 @@ talk_dplyr_function = function(cmd) {
   if (first_word %in% c("select", "arrange", "filter",
                         "mutate", "group_by", "summarize",
                         "count", "tally",
+                        "add_count", "add_tally",
                         "rename", "ggplot", "replace")) {
     dplyr_func = first_word
   }

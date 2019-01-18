@@ -27,6 +27,16 @@ if (annyang) {
   count = function(command) {
       inputFunc(command, 'count');
   };
+  add_count = function(command) {
+      inputFunc(command, 'add_count');
+  };
+  tally = function() {
+      inputFunc('', 'tally');
+  };
+  add_tally = function() {
+      inputFunc('', 'add_tally');
+  };
+
   replace = function(command) {
       inputFunc(command, 'replace');
   };
@@ -48,6 +58,8 @@ if (annyang) {
     'order *command': arrange,
     'group by *command': group_by,
     'group *command': group_by,
+
+    'add count *command': add_count,
 
     'count by *command': count,
     'count up *command': count,
@@ -98,6 +110,10 @@ if (annyang) {
 
     'filter *command': filter,
     'select *command': select,
+
+    'tally': undo,
+    'add tally': undo,
+
     'undo again': undo,
     'undo': undo,
     'reset': reset
