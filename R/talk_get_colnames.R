@@ -50,7 +50,8 @@ talk_get_colnames = function(
   stop_words = talkr::talk_stop_words,
   additional_stop_words = NULL,
   remove_duplicated = TRUE,
-  allowed_words = c("descending", "ascending")
+  allowed_words = c("descending", "ascending"),
+  ...
 ) {
 
   var = variable = NULL

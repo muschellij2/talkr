@@ -51,6 +51,10 @@ if (annyang) {
     inputFunc('', retstring);
   };
 
+  regress = function(yvar, command) {
+    var retstring = yvar.concat(' on ', command);
+    inputFunc(retstring, 'regress');
+  };
 
   var commands3 = {
     'sort *command': arrange,
@@ -61,6 +65,9 @@ if (annyang) {
     'group the data set by *command': group_by,
     'group data by *command': group_by,
     'group *command': group_by,
+
+    'regress :yvar on *command': regress,
+
 
     'add count *command': add_count,
     'add counts *command': add_count,

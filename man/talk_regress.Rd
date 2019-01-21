@@ -8,7 +8,7 @@
 \alias{talk_process_regress_cmd}
 \title{Talk to Group a Data set}
 \usage{
-talk_regress(.data, cmd, verbose = FALSE, ...)
+talk_regress(.data, cmd, tidy = TRUE, verbose = FALSE, ...)
 
 talk_regress_links()
 
@@ -25,9 +25,12 @@ perform the operation.}
 
 \item{cmd}{Command to perform on the data set.}
 
+\item{tidy}{should \code{\link{tidy}} be run?}
+
 \item{verbose}{print diagnostic output}
 
-\item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}}
+\item{...}{additional arguments to pass to \code{\link{talk_get_colnames}}
+or \code{\link{tidy}}}
 
 \item{data_colnames}{column names of the data}
 
@@ -59,7 +62,9 @@ df = mtcars \%>\%
  mod_1 = talk_regress(.data, cmd)
  cmd = "regress poisson cyl and hp and column 6 on mpg"
  mod_2 = talk_regress(.data, cmd)
-testthat::expect_equal(coef(mod_1), coef(mod_2))
+ testthat::expect_equal(coef(mod_1), coef(mod_2))
+ cmd = "regress poisson cyl and hp and column 6 on mpg"
+ mod_2 = talk_regress(.data, cmd, exponentiate = TRUE)
 
  cmd = "regress am on  hp and column 6 and mpg binomial"
  #'

@@ -28,7 +28,8 @@ talk_dplyr_function = function(cmd) {
                         "mutate", "group_by", "summarize",
                         "count", "tally",
                         "add_count", "add_tally",
-                        "rename", "ggplot", "replace")) {
+                        "rename", "ggplot", "replace",
+                        "regress")) {
     dplyr_func = first_word
   }
   # if (grepl(" all ", cmd)) {

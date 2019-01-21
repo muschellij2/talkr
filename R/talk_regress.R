@@ -7,10 +7,13 @@
 #' perform the operation.
 #' @param verbose print diagnostic output
 #' @param ... additional arguments to pass to \code{\link{talk_get_colnames}}
+#' or \code{\link{tidy}}
+#' @param tidy should \code{\link{tidy}} be run?
 #'
 #' @return A \code{data.frame} or list of them if \code{length(cmds) > 1}.
 #' @export
 #' @importFrom stats glm as.formula
+#' @importFrom broom tidy
 #'
 #' @examples
 #' library(tibble)
@@ -31,14 +34,18 @@
 #'  mod_1 = talk_regress(.data, cmd)
 #'  cmd = "regress poisson cyl and hp and column 6 on mpg"
 #'  mod_2 = talk_regress(.data, cmd)
-#' testthat::expect_equal(coef(mod_1), coef(mod_2))
+#'  testthat::expect_equal(coef(mod_1), coef(mod_2))
+#'  cmd = "regress poisson cyl and hp and column 6 on mpg"
+#'  mod_2 = talk_regress(.data, cmd, exponentiate = TRUE)
 #'
 #'  cmd = "regress am on  hp and column 6 and mpg binomial"
 #'  #'
 #'  cmd =  "regress columns 2 and 5, mpg decreasing"
 #'  testthat::expect_error(talk_regress(.data, cmd),
 #'  "y variable")
-talk_regress = function(.data, cmd, verbose = FALSE, ...) {
+talk_regress = function(.data, cmd,
+                        tidy = TRUE,
+                        verbose = FALSE, ...) {
 
   data_colnames = colnames(.data)
   out = talk_regress_expr(data_colnames, cmd, ...)
@@ -69,6 +76,13 @@ talk_regress = function(.data, cmd, verbose = FALSE, ...) {
     args$formula = as.formula(x$formula)
     args$family = make_family(x$family, x$link)
     res = do.call(glm, args = args)
+    # exp = x$family %in% c("binomial",
+    #                       "poisson",
+    #                       "quasibinomial",
+    #                       "quasipoisson")
+    if (tidy) {
+      res = broom::tidy(res, conf.int = TRUE, ...)
+    }
     # r = names(res$call)
     # # res$call = res$call[ r != ""]
     # # res$call$formula = call(res$call$formula )

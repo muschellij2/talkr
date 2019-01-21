@@ -9,7 +9,7 @@
 talk_get_colnames(data_colnames, cmd,
   stop_words = talkr::talk_stop_words, additional_stop_words = NULL,
   remove_duplicated = TRUE, allowed_words = c("descending",
-  "ascending"))
+  "ascending"), ...)
 
 talk_cmd_to_colnames(data_colnames, cmd,
   stop_words = talkr::talk_stop_words, additional_stop_words = NULL)

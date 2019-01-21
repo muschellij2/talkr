@@ -22,7 +22,8 @@ Imports:
     friendlyeval,
     ggplot2,
     utils,
-    stats
+    stats,
+    broom
 Suggests: 
     covr,
     knitr,
