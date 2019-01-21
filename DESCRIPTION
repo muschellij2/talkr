@@ -1,7 +1,7 @@
 Type: Package
 Package: talkr
 Title: Talk through Data Analysis
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: 
     person(given = "John",
            family = "Muschelli",
@@ -21,7 +21,8 @@ Imports:
     english,
     friendlyeval,
     ggplot2,
-    utils
+    utils,
+    stats
 Suggests: 
     covr,
     knitr,

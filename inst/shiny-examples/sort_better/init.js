@@ -57,9 +57,13 @@ if (annyang) {
     'arrange *command': arrange,
     'order *command': arrange,
     'group by *command': group_by,
+    'group the data by *command': group_by,
+    'group the data set by *command': group_by,
+    'group data by *command': group_by,
     'group *command': group_by,
 
     'add count *command': add_count,
+    'add counts *command': add_count,
 
     'count by *command': count,
     'count up *command': count,
@@ -150,3 +154,7 @@ $(function() {
   setTimeout(initVoice, 10);
 });
 
+annyang.addCallback('result', function(phrases) {
+  console.log("I think the user said: ", phrases[0]);
+  console.log("But then again, it could be any of the following: ", phrases);
+});
