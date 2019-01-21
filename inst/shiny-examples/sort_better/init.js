@@ -66,7 +66,8 @@ if (annyang) {
     'group data by *command': group_by,
     'group *command': group_by,
 
-    'regress :yvar on *command': regress,
+    'regress(ed) :yvar on *command': regress,
+    'progress(ed) :yvar on *command': regress,
 
 
     'add count *command': add_count,
@@ -122,11 +123,13 @@ if (annyang) {
     'filter *command': filter,
     'select *command': select,
 
-    'tally': undo,
-    'add tally': undo,
+    'tally': tally,
+    'add tally': add_tally,
+
 
     'undo again': undo,
     'undo': undo,
+    'undue': undo,
     'reset': reset
   } ;
   var commands = {
@@ -154,14 +157,19 @@ if (annyang) {
   // annyang.addCommands(hello_commands);
   annyang.addCommands(commands3);
   annyang.start();
+  annyang.addCallback('result', function(phrases) {
+    console.log("I think the user said: ", phrases[0]);
+    // Shiny.onInputChange('phrase', phrases[0]);
+    Shiny.onInputChange('phrase', phrases);
+    console.log("But then again, it could be any of the following: ",
+    phrases);
+  });
+
   }
+
 };
 
 $(function() {
   setTimeout(initVoice, 10);
 });
 
-annyang.addCallback('result', function(phrases) {
-  console.log("I think the user said: ", phrases[0]);
-  console.log("But then again, it could be any of the following: ", phrases);
-});

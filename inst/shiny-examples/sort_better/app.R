@@ -60,6 +60,9 @@ shinyApp(
         'To change the title, say something that starts with "sort" or arrange, e.g.',
         '"arrange by hp", or "sort mpg descending".'
       ),
+      h3(
+        textOutput('phrase')
+      ),
       helpText(HTML(
         'The source code of this app is <a href="https://github.com/muschellij2/talkr">on Github</a>.',
         'You may also see <a href="http://vimeo.com/yihui/shiny-voice">my demo</a> of playing with this app.'
@@ -207,6 +210,13 @@ shinyApp(
       }
       paste0("Your command is: ", cmd)
     })
+
+    output$phrase = renderText({
+      print(input$phrase)
+      print(length(input$phrase))
+      paste(input$phrase, collapse = "\n")
+    })
+
     output$cmd_clean = renderText({
       cmd = get_cmd()
       if (grepl("^reset", cmd)) {
