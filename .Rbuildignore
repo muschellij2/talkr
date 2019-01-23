@@ -1,3 +1,4 @@
+^\.github/stale\.yml$
 ^R/talk_Arith\.R$
 ^data-raw$
 ^inst/shiny-examples/sort_better/rsconnect$

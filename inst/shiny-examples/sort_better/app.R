@@ -214,7 +214,7 @@ shinyApp(
     output$phrase = renderText({
       print(input$phrase)
       print(length(input$phrase))
-      paste(input$phrase, collapse = "\n")
+      paste(input$phrase, collapse = "; ")
     })
 
     output$cmd_clean = renderText({
