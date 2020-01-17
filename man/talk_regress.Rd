@@ -14,8 +14,12 @@ talk_regress_links()
 
 talk_regress_families()
 
-talk_regress_expr(data_colnames, cmd, allowed_words = c("condition",
-  talk_regress_links(), talk_regress_families()), ...)
+talk_regress_expr(
+  data_colnames,
+  cmd,
+  allowed_words = c("condition", talk_regress_links(), talk_regress_families()),
+  ...
+)
 
 talk_process_regress_cmd(cmd)
 }

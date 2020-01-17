@@ -8,8 +8,12 @@
 \usage{
 talk_replace(.data, cmd, verbose = FALSE, ...)
 
-talk_replace_expr(data_colnames, cmd, allowed_words = c("factor",
-  "logical", "numeric", "character", "double"), ...)
+talk_replace_expr(
+  data_colnames,
+  cmd,
+  allowed_words = c("factor", "logical", "numeric", "character", "double"),
+  ...
+)
 
 talk_process_replace_cmd(cmd)
 }

@@ -6,13 +6,22 @@
 \alias{talk_check_colnames}
 \title{Talk to Arrange a Data set}
 \usage{
-talk_get_colnames(data_colnames, cmd,
-  stop_words = talkr::talk_stop_words, additional_stop_words = NULL,
-  remove_duplicated = TRUE, allowed_words = c("descending",
-  "ascending"), ...)
+talk_get_colnames(
+  data_colnames,
+  cmd,
+  stop_words = talkr::talk_stop_words,
+  additional_stop_words = NULL,
+  remove_duplicated = TRUE,
+  allowed_words = c("descending", "ascending"),
+  ...
+)
 
-talk_cmd_to_colnames(data_colnames, cmd,
-  stop_words = talkr::talk_stop_words, additional_stop_words = NULL)
+talk_cmd_to_colnames(
+  data_colnames,
+  cmd,
+  stop_words = talkr::talk_stop_words,
+  additional_stop_words = NULL
+)
 
 talk_check_colnames(data_colnames)
 }

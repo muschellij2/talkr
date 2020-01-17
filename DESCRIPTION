@@ -36,4 +36,4 @@ LazyData: true
 VignetteBuilder: knitr
 URL: https://github.com/muschellij2/talkr
 BugReports: https://github.com/muschellij2/talkr/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.1

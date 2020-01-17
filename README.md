@@ -43,8 +43,8 @@ is.unsorted(df$mpg)
 #> [1] TRUE
 res = df %>%
   talk("Sort df by mpg")
-#> Warning in talk_arrange(.data = structure(list(car = c("Mazda RX4", "Mazda
-#> RX4 Wag", : Some words not allowed! Removed
+#> Warning in talk_get_colnames(data_colnames, cmd, ...): Some words not allowed!
+#> Removed
 #> [[1]]
 #> [1] "df"  "mpg"
 is.unsorted(res$mpg)

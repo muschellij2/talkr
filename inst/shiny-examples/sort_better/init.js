@@ -112,6 +112,7 @@ if (annyang) {
     'g g plot *command': plot,
     'ggplot *command': plot,
     'plot *command': plot,
+    'pot *command': plot,
 
     'subset rose *command': filter,
     'select rose *command': filter,

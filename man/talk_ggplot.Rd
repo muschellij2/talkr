@@ -8,8 +8,7 @@
 \usage{
 talk_ggplot(.data, cmd, verbose = FALSE, ...)
 
-talk_ggplot_expr(data_colnames, cmd, allowed_words = talk_ggplot_words(),
-  ...)
+talk_ggplot_expr(data_colnames, cmd, allowed_words = talk_ggplot_words(), ...)
 
 talk_process_ggplot_cmd(cmd)
 }
