@@ -30,6 +30,8 @@ process_cmd = function(
   cmd = gsub("^facet (wrap|grid) ", "facet_\\1 ", cmd)
   cmd = gsub("^add (count|tally)", "add_\\1", cmd)
 
+  cmd = gsub(" underscore ", "_", cmd)
+  # cmd = gsub(" dot ", "_", cmd)
   cmd = gsub("density_2d", "density2d", cmd)
   cmd = gsub("qq_line", "qqline", cmd)
 
